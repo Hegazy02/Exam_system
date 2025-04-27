@@ -54,3 +54,25 @@ body {
 #confirm-password-error {
     margin-bottom: 8px;
 }
+
+#error-message {
+    display: none;
+    color: #f0f0f0;
+    margin-top: 10px;
+    background-color: red;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#success-message {
+    display: none;
+    color: #f0f0f0;
+    margin-top: 10px;
+    background-color: green;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.error-border {
+    outline-color: red;
+}

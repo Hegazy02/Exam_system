@@ -3,13 +3,13 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-    <link rel="stylesheet" href="style.css" />
+    <title>Sign Up</title>
+    <link rel="stylesheet" href="../css/signup.css" />
   </head>
   <body>
     <form action="" id="login-form">
       <div>
-        <label for="userName">userName</label>
+        <label for="userName">Username</label>
         <input type="text" id="userName" placeholder="Username" />
         <span id="userName-error" class="error"></span>
       </div>
@@ -28,7 +28,13 @@
         <span id="confirm-password-error" class="error"></span>
       </div>
       <button type="submit" id="signUp-btn">Sign Up</button>
+      <p id="already-have-account">
+        Already have an account? <span><a href="./login.html">Login</a></span>
+      </p>
+
+      <div id="error-message"></div>
+      <div id="success-message"></div>
     </form>
-    <script src="script.js"></script>
+    <script src="../script/signup.js"></script>
   </body>
 </html>
