@@ -15,17 +15,14 @@ function doPasswordsMatch(password, confirmPassword) {
   return password === confirmPassword;
 }
 
-function saveUser(userName, password, users, errorMessage, successMessage) {
+function saveUser(userName, password, users, errorMessage) {
   const user = { userName, password };
   if (isUserExists(userName, users, errorMessage)) {
     return;
   }
   users.push(user);
   localStorage.setItem("users", JSON.stringify(users));
-  displayElement(successMessage, "User registered successfully.");
-  setTimeout(() => {
-    window.location.href = "../html/login.html";
-  }, 1000);
+
 }
 function isUserExists(userName, users, errorMessage) {
   if (users.some((user) => user.userName === userName)) {
@@ -164,6 +161,11 @@ function signUpPage() {
       errorMessage,
       successMessage
     );
+  displayElement(successMessage, "User registered successfully.");
+
+    setTimeout(() => {
+      window.location.href = "../html/login.html";
+    }, 1000);
   });
 }
 

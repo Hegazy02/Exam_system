@@ -5,5 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
   </head>
-  <body></body>
+  <body>
+    <form action="" id="login-form">
+      <div>
+        <label for="userName">Username</label>
+        <input type="text" id="userName" placeholder="Username" />
+        <span id="userName-error" class="error"></span>
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Password" />
+        <span id="password-error" class="error"></span>
+      </div>
+
+      <button type="submit" id="login-btn">Login</button>
+      <p id="do-not-have-account">
+        don't have an account? <span><a href="./signup.html">signup</a></span>
+      </p>
+
+      <div id="error-message"></div>
+    </form>
+  </body>
 </html>
