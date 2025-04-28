@@ -1,6 +1,3 @@
-function getUsers() {
-  return JSON.parse(localStorage.getItem("users")) ?? [];
-}
 function isValidUserName(userName) {
   const userNameRegex = /^[a-zA-Z0-9]+$/;
   return userNameRegex.test(userName);
@@ -15,14 +12,14 @@ function doPasswordsMatch(password, confirmPassword) {
   return password === confirmPassword;
 }
 
-function saveUser(userName, password, users, errorMessage) {
+function createUser(userName, password, users, errorMessage) {
   const user = { userName, password };
   if (isUserExists(userName, users, errorMessage)) {
-    return;
+    return false;
   }
   users.push(user);
-  localStorage.setItem("users", JSON.stringify(users));
-
+  saveToLocalStorage("users", users);
+  return true;
 }
 function isUserExists(userName, users, errorMessage) {
   if (users.some((user) => user.userName === userName)) {
@@ -153,20 +150,45 @@ function signUpPage() {
     );
 
     if (!isFormValid) return;
-    const users = getUsers();
-    saveUser(
+    const users = getFromLocalStorage("users");
+    console.log(users);
+    const isUserCreated = createUser(
       userNameInput.value,
       passwordInput.value,
       users,
       errorMessage,
       successMessage
     );
-  displayElement(successMessage, "User registered successfully.");
+
+    if (!isUserCreated) return;
+    displayElement(successMessage, "User registered successfully.");
 
     setTimeout(() => {
       window.location.href = "../html/login.html";
     }, 1000);
   });
+}
+const secretKey = "my-secret-key";
+
+function encryptData(data) {
+  return CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
+}
+
+function decryptData(ciphertext) {
+  const bytes = CryptoJS.AES.decrypt(ciphertext, secretKey);
+  const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
+  return JSON.parse(decryptedData);
+}
+
+function saveToLocalStorage(key, data) {
+  const encryptedData = encryptData(data);
+  localStorage.setItem(key, encryptedData);
+}
+
+function getFromLocalStorage(key) {
+  const encryptedData = localStorage.getItem(key);
+  if (!encryptedData) return [];
+  return decryptData(encryptedData);
 }
 
 signUpPage();
