@@ -181,8 +181,13 @@ function decryptData(ciphertext) {
 }
 
 function saveToLocalStorage(key, data) {
-  const encryptedData = encryptData(data);
-  localStorage.setItem(key, encryptedData);
+  try {
+    const encryptedData = encryptData(data);
+    localStorage.setItem(key, encryptedData);
+  } catch (error) {
+    console.log(error);
+    
+  }
 }
 
 function getFromLocalStorage(key) {
