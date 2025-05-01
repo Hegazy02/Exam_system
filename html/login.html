@@ -2,33 +2,40 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Login</title>
-  <link rel="stylesheet" href="../css/signup.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="../css/signup.css" />
+    <link rel="stylesheet" href="../css/background.css">
 </head>
 
 <body>
-  <form action="" id="login-form">
-    <div>
-      <label for="userName">Username</label>
-      <input type="text" id="userName" placeholder="Username" />
-      <span id="userName-error" class="error"></span>
-    </div>
-    <div>
-      <label for="password">Password</label>
-      <input type="password" id="password" placeholder="Password" />
-      <span id="password-error" class="error"></span>
-    </div>
+    <canvas id="beamsCanvas"></canvas>
 
-    <button type="submit" id="login-btn">Login</button>
-    <p id="do-not-have-account">
-      don't have an account? <span><a href="./signup.html">signup</a></span>
-    </p>
+    <form action="" id="login-form">
+        <div>
+            <label for="userName">Username</label>
+            <input type="text" id="userName" placeholder="Username" />
+            <span id="userName-error" class="error"></span>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Password" />
+            <span id="password-error" class="error"></span>
+        </div>
 
-    <div id="error-message"></div>
-  </form>
-  <script src="../script/login.js"></script>
+        <button type="submit" id="login-btn">Login</button>
+        <p id="do-not-have-account">
+            don't have an account? <span><a href="signUp.html" id="signup-link">signup</a></span>
+        </p>
+
+        <div id="error-message" class="error-message"></div>
+    </form>
+
+    <script src="../script/background.js"></script>
+    <script src="../script/login.js"></script>
 </body>
 
 </html>

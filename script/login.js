@@ -1,61 +1,82 @@
-let loginPage = document.createElement("div");
-loginPage.classList.add("login-page");
-
-let userName = document.createElement("input");
-userName.className = "userName";
-userName.type = "text";
-userName.placeholder = "Username";
-
-let password = document.createElement("input");
-password.className = "password";
-password.type = "password";
-password.placeholder = "Password";
-
-let passError = document.createElement("span");
-passError.className = "passError";
-
-let loginButton = document.createElement("button");
-loginButton.className = "login-button";
-loginButton.textContent = "Login";
-
-let errorMsg = document.createElement("span");
-errorMsg.className = "errorMsg";
-
-loginPage.appendChild(userName);
-loginPage.appendChild(password);
-loginPage.appendChild(loginButton);
-loginPage.appendChild(errorMsg);
-loginPage.appendChild(passError);
-document.body.appendChild(loginPage);
+const loginButton = document.getElementById("login-btn");
+const userNameErrorMessage = document.getElementById("userName-error");
+const passwordErrorMessage = document.getElementById("password-error");
+const errorMsg = document.getElementById("error-message");
+const userName = document.getElementById("userName");
+const password = document.getElementById("password");
+const signUpLink = document.getElementById("signup-link");
 
 loginButton.addEventListener("click", checkLogin);
+password.addEventListener("input", passValidation);
+userName.addEventListener("input", userNameValidation);
 
-function checkLogin() {
-    passError.textContent = "";
-    errorMsg.textContent = "";
-    let ennteredUsername = userName.value;
+if (signUpLink) {
+    signUpLink.addEventListener("click", (e) => {
+        e.preventDefault();
+        window.location.href = "signUp.html";
+    });
+}
+
+function displayElement(element, text) {
+    element.textContent = text;
+    element.style.display = "block";
+}
+
+function hideElement(element) {
+    element.style.display = "none";
+}
+
+function checkLogin(e) {
+    e.preventDefault();
+    const isPasswordValid = passValidation();
+    const isUserNameValid = userNameValidation();
+
+    hideElement(errorMsg);
+    let enteredUsername = userName.value;
     let enteredPassword = password.value;
 
-    if (passValidation()) {
-        let userData = JSON.parse(localStorage.getItem("user"));
-        if (userData) {
-            if (ennteredUsername === userData.userName && enteredPassword === userData.password) {
-                loginPage.remove();
+    if (isPasswordValid && isUserNameValid) {
+        let users = JSON.parse(localStorage.getItem("users")) || [];
+
+        const user = users.find(user => user.userName === enteredUsername);
+
+        if (user) {
+            if (user.password === enteredPassword) {
+
+                localStorage.setItem("currentUser", JSON.stringify(user));
+
+                setTimeout(() => {
+                    window.location.href = "signUp.html";
+                }, 1000);
             } else {
-                errorMsg.textContent = "Username or password is not correct!";
+                displayElement(errorMsg, "Username or password is not correct!");
             }
         } else {
-            errorMsg.textContent = "Username is not found!";
+            displayElement(errorMsg, "Username is not found!");
         }
     }
 }
+
 function passValidation() {
-    if (password.value.length < 3) {
-        passError.textContent = "Password must be more than 3 letters!"
+    if (password.value.length < 8) {
+        passwordErrorMessage.textContent = "Password must be more than 8 letters!";
+        password.classList.add("error-border");
         return false;
+    } else {
+        passwordErrorMessage.textContent = "";
+        password.classList.remove("error-border");
+        return true;
     }
-    return true;
 }
 
-
-
+function userNameValidation() {
+    if (userName.value.length < 1) {
+        userNameErrorMessage.textContent = "Username shouldn't be empty!";
+        userName.classList.add("error-border");
+        return false;
+    } else {
+        userNameErrorMessage.textContent = "";
+        userName.classList.remove("error-border");
+        return true;
+    }
+}
