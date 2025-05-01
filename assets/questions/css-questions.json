@@ -1,0 +1,63 @@
+[
+    {
+      "question": "What does CSS stand for?",
+      "options": ["Cascading Style Sheets", "Computer Style Sheets", "Creative Style Syntax", "Colorful Style System"],
+      "answer": "Cascading Style Sheets",
+      "explanation": "CSS stands for Cascading Style Sheets and is used to style HTML elements."
+    },
+    {
+      "question": "Which property is used to change the background color?",
+      "options": ["color", "bgcolor", "background-color", "background"],
+      "answer": "background-color",
+      "explanation": "The `background-color` property sets the background color of an element."
+    },
+    {
+      "question": "Which CSS property controls the text size?",
+      "options": ["font-style", "text-size", "font-size", "text-style"],
+      "answer": "font-size",
+      "explanation": "The `font-size` property defines the size of the text."
+    },
+    {
+      "question": "How do you make a CSS class selector?",
+      "options": [".classname", "#classname", "*classname", "classname"],
+      "answer": ".classname",
+      "explanation": "In CSS, classes are selected using a dot (e.g., `.example`)."
+    },
+    {
+      "question": "Which property is used to make text bold?",
+      "options": ["font-weight", "text-bold", "font-style", "bold"],
+      "answer": "font-weight",
+      "explanation": "Use `font-weight: bold` to make text bold."
+    },
+    {
+      "question": "How do you select an element with id 'header'?",
+      "options": [".header", "#header", "header", "*header"],
+      "answer": "#header",
+      "explanation": "IDs are selected using a hash symbol (e.g., `#header`)."
+    },
+    {
+      "question": "What is the default position value of an HTML element?",
+      "options": ["static", "relative", "absolute", "fixed"],
+      "answer": "static",
+      "explanation": "By default, HTML elements have `position: static`."
+    },
+    {
+      "question": "Which property is used to hide an element?",
+      "options": ["display: none", "visibility: hidden", "opacity: 0", "All of the above"],
+      "answer": "All of the above",
+      "explanation": "`display: none`, `visibility: hidden`, and `opacity: 0` all hide elements in different ways."
+    },
+    {
+      "question": "Which unit is relative to the font-size of the element?",
+      "options": ["px", "em", "%", "vh"],
+      "answer": "em",
+      "explanation": "`em` is relative to the font-size of the parent element."
+    },
+    {
+      "question": "Which pseudo-class targets the first child of an element?",
+      "options": [":first", ":first-child", "::first-line", ":nth-child(1)"],
+      "answer": ":first-child",
+      "explanation": "`:first-child` targets the first child of a parent element."
+    }
+  ]
+  

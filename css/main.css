@@ -1,0 +1,19 @@
+:root {
+    --main-color: rgb(57, 57, 142);
+    --secondary-color: rgb(212, 207, 207);
+    --gray-color: rgba(182, 178, 178, 0.123);
+    --green-color: rgb(0, 128, 0);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}

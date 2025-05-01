@@ -1,0 +1,205 @@
+@import url('./main.css');
+
+#categories-layout {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+    margin: 0 auto;
+    gap: 10px;
+    /* border: 1px solid; */
+    padding: 50px;
+    border-radius: 10px;
+    background-color: var(--main-color);
+    color: white;
+}
+
+header {
+    display: flex;
+    flex-direction: column;
+}
+
+#category {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.category-btn {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    background-color: white;
+    color: var(--main-color);
+    font-weight: bold;
+}
+
+.loading-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.loader {
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid var(--main-color);
+    width: 120px;
+    height: 120px;
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.warning {
+    color: red;
+}
+
+.questions-layout {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 20px;
+
+}
+
+.questions-layout section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 600px;
+    width: 100%;
+}
+
+.questions-layout aside {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 10px;
+}
+
+.question {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.question ul {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.option {
+    display: flex;
+    gap: 10px;
+    border: 1px solid var(--main-color);
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.option:hover {
+    background-color: var(--gray-color);
+    /* color: white; */
+}
+
+.btns {
+    display: flex;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.next-btn,
+.previous-btn {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    background-color: var(--main-color);
+    color: white;
+    font-weight: bold;
+}
+
+.submit-btn {
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 5px;
+    border: none;
+    background-color: var(--green-color);
+    color: white;
+    font-weight: bold;
+
+}
+
+button:disabled {
+    background-color: var(--secondary-color);
+    color: var(--main-color);
+    cursor: not-allowed;
+}
+
+#loading-nav {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 10px;
+    background-color: var(--main-color);
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+}
+
+#flag::after {
+    content: "\f024";
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 20px;
+    color: var(--main-color);
+    cursor: pointer;
+}
+
+#header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.question-icon {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    background-color: var(--gray-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.active-question {
+    background-color: #666fa791;
+    color: white;
+}
+
+.flagged-question,
+.flagged-and-answered-question {
+    background-color: red;
+    color: white;
+}
+
+.flagged-and-active-question {
+    background-color: rgb(125, 48, 48);
+    color: white;
+}
+
+.answered-question {
+    background-color: var(--main-color);
+    color: white;
+}

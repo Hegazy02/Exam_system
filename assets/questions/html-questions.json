@@ -1,0 +1,62 @@
+[
+  {
+    "question": "What is the correct HTML element for inserting a line break?",
+    "answer": "<br>",
+    "options": ["<break>", "<linebreak>", "<lb>", "<br>"]
+  },
+  {
+    "question": "Which HTML tag is used to define an unordered list?",
+    "answer": "<ul>",
+    "options": ["<ol>", "<ul>", "<li>", "<list>"]
+  },
+  {
+    "question": "What does HTML stand for?",
+    "answer": "Hyper Text Markup Language",
+    "options": [
+      "Hyperlinks and Text Markup Language",
+      "Home Tool Markup Language",
+      "Hyper Text Markup Language",
+      "Hyperlinking Text Management Language"
+    ]
+  },
+  {
+    "question": "Which HTML tag is used to display a picture on a webpage?",
+    "answer": "<img>",
+    "options": ["<picture>", "<img>", "<photo>", "<image>"]
+  },
+  {
+    "question": "How can you make a numbered list in HTML?",
+    "answer": "<ol>",
+    "options": ["<ul>", "<ol>", "<li>", "<dl>"]
+  },
+  {
+    "question": "Which tag is used to create a hyperlink in HTML?",
+    "answer": "<a>",
+    "options": ["<a>", "<link>", "<href>", "<hyperlink>"]
+  },
+  {
+    "question": "Which attribute is used to provide an alternative text for an image?",
+    "answer": "alt",
+    "options": ["title", "alt", "src", "href"]
+  },
+  {
+    "question": "What is the correct HTML element for the largest heading?",
+    "answer": "<h1>",
+    "options": ["<heading>", "<h6>", "<head>", "<h1>"]
+  },
+  {
+    "question": "Which HTML element is used to specify a footer for a document?",
+    "answer": "<footer>",
+    "options": ["<bottom>", "<section>", "<footer>", "<aside>"]
+  },
+  {
+    "question": "Which doctype declaration is correct for HTML5?",
+    "answer": "<!DOCTYPE html>",
+    "options": [
+      "<!DOCTYPE HTML5>",
+      "<!DOCTYPE html>",
+      "<!DOCTYPE HTML PUBLIC>",
+      "<!DOCTYPE html5>"
+    ]
+  }
+]
