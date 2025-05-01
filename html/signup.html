@@ -1,42 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign Up</title>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code&display=swap" rel="stylesheet">
+
     <link rel="stylesheet" href="../css/signup.css" />
-  </head>
-  <body>
+    <link rel="stylesheet" href="../css/background.css">
+
+</head>
+
+<body>
+
+    <canvas id="beamsCanvas"></canvas>
+
     <form action="" id="login-form">
-      <div>
-        <label for="userName">Username</label>
-        <input type="text" id="userName" placeholder="Username" />
-        <span id="userName-error" class="error"></span>
-      </div>
-      <div>
-        <label for="password">Password</label>
-        <input type="password" id="password" placeholder="Password" />
-        <span id="password-error" class="error"></span>
-      </div>
-      <div>
-        <label for="confirm-password">Confirm Password</label>
-        <input
-          type="password"
-          id="confirm-password"
-          placeholder="Confirm Password"
-        />
-        <span id="confirm-password-error" class="error"></span>
-      </div>
-      <button type="submit" id="signUp-btn">Sign Up</button>
-      <p id="already-have-account">
-        Already have an account? <span><a href="./login.html">Login</a></span>
-      </p>
+        <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="User Email" />
+            <span id="email-error" class="error"></span>
+        </div>
+        <div>
+            <label for="userName">Username</label>
+            <input type="text" id="userName" placeholder="Username" />
+            <span id="userName-error" class="error"></span>
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Password" />
+            <span id="password-error" class="error"></span>
+        </div>
+        <div>
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password" placeholder="Confirm Password" />
+            <span id="confirm-password-error" class="error"></span>
+        </div>
+        <button type="submit" id="signUp-btn">Sign Up</button>
+        <p id="already-have-account">
+            Already have an account? <span><a href="login.html">Login</a></span>
+        </p>
 
-      <div id="error-message"></div>
-      <div id="success-message"></div>
+        <div id="error-message"></div>
+        <div id="success-message"></div>
     </form>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
 
+
+    <script src="../script/background.js"></script>
     <script src="../script/signup.js"></script>
-  </body>
+</body>
+
 </html>
+
+
