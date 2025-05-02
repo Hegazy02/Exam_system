@@ -1,15 +1,11 @@
-// Utility Functions
 function createElement(tag, classNames = [], innerHTML = "") {
   const element = document.createElement(tag);
   classNames.forEach((className) => element.classList.add(className));
   element.innerHTML = innerHTML;
   return element;
 }
-
-// DOM Elements
 const categoryButtons = document.querySelectorAll(".category-btn");
 
-// Event Listeners
 categoryButtons.forEach((btn) => {
   btn.addEventListener("click", async () => handleCategoryClick(btn));
 });
@@ -33,7 +29,6 @@ async function handleCategoryClick(button) {
   }
 }
 
-// Fetch
 async function fetchQuestions(id) {
   const response = await fetch(`../assets/questions/${id}.json`);
   return response.json();
@@ -45,7 +40,6 @@ function shuffle(array) {
   }
   return array;
 }
-// UI Creation
 function createLoadingScreen() {
   return createElement("div", ["loading-screen"], '<div class="loader"></div>');
 }
@@ -75,7 +69,7 @@ function createQuestionsLayout() {
   return layout;
 }
 
-function createQuestionLayout(container) {
+function createQuestionLayout() {
   const div = createElement(
     "div",
     ["question"],
@@ -84,12 +78,11 @@ function createQuestionLayout(container) {
   return div;
 }
 
-// Main Exam Logic
 function startExam(questions, layout) {
   const userAnswers = {};
   let currentQuestionIndex = 0;
   const duration = 180;
-  const questionDiv = createQuestionLayout(layout);
+  const questionDiv = createQuestionLayout();
   layout.querySelector("#header").after(questionDiv);
   startTimer(duration, layout);
   displayQuestion(questionDiv, questions, currentQuestionIndex, userAnswers);
@@ -112,23 +105,20 @@ function startExam(questions, layout) {
   setupNavigation(examData);
   setupSubmitHandler(examData);
   setupFlagHandler(examData);
+  setupSidebarClickHandler(examData);
 }
 
+function displayQuestion(container, questions, currentQuestionIndex, answers) {
+  renderSidebar(questions, currentQuestionIndex, answers);
 
-
-function displayQuestion(container, questions, index, answers) {
-  const sidebar = document.querySelector("#sidebar");
-  renderSidebar(questions, index, answers);
-  sidebar.addEventListener("click", handleSidebarClick);
-
-  const current = questions[index];
-  container.setAttribute("index", index);
+  const current = questions[currentQuestionIndex];
+  container.setAttribute("index", currentQuestionIndex);
   container.querySelector(".title").textContent = current.question;
 
   const optionsList = container.querySelector("ul");
   optionsList.innerHTML = "";
   current.options.forEach((option, i) => {
-    const isSelected = answers[index]?.selectedAnswer === i;
+    const isSelected = answers[currentQuestionIndex]?.selectedAnswer === i;
     const checked = isSelected ? "checked" : "";
     const sanitized = option.replace(/</g, "&lt;").replace(/>/g, "&gt;");
     optionsList.innerHTML += `
@@ -172,8 +162,7 @@ function setupNavigation(data) {
         data.userAnswers
       );
       data.previousBtn.disabled = false;
-      data.nextBtn.disabled =
-        data.currentQuestionIndex === data.questions.length - 1;
+      toggleNextBtn(data);
     }
   });
 
@@ -186,16 +175,26 @@ function setupNavigation(data) {
         data.currentQuestionIndex,
         data.userAnswers
       );
-      data.previousBtn.disabled = data.currentQuestionIndex === 0;
+      togglePreviousBtn({
+        previousBtn: data.previousBtn,
+        currentQuestionIndex: data.currentQuestionIndex,
+      });
       data.nextBtn.disabled = false;
     }
   });
 }
-
+function toggleNextBtn(data) {
+  data.nextBtn.disabled =
+    data.currentQuestionIndex === data.questions.length - 1;
+}
+function togglePreviousBtn(data) {
+  data.previousBtn.disabled = data.currentQuestionIndex === 0;
+}
 function setupSubmitHandler(data) {
   data.submitBtn.addEventListener("click", () => {
     const result = getResult(data.userAnswers, data.questions);
-    console.log(result);
+    window.location.href = `./login.html?result=${JSON.stringify(result)}`;
+
   });
 }
 
@@ -219,7 +218,6 @@ function setupFlagHandler(data) {
   });
 }
 
-// Timer and Progress
 function startTimer(duration, layout) {
   const display = layout.querySelector(".timer");
   const loadingNav = layout.querySelector("#loading-nav");
@@ -252,7 +250,6 @@ function increaseLoadingNav(nav, duration) {
   }, 1000);
 }
 
-// Sidebar
 function renderSidebar(questions, current, answers) {
   const sidebar = document.querySelector("#sidebar");
   const flagged = new Set();
@@ -283,26 +280,52 @@ function renderSidebar(questions, current, answers) {
       <div class="question-icon ${className}"><p>${i + 1}</p></div>`;
   });
 }
-function handleSidebarClick(e) {
-  const target = e.target;
-  const sidebar = this;
-  if (target.classList.contains("question-icon")) {
-    const index = [...sidebar.children].indexOf(target);
-    const container = document.querySelector(".question");
-    console.log(container);
-    
-    // displayQuestion(container, questions, index, userAnswers);
-  }
+
+function setupSidebarClickHandler(data) {
+  const sidebar = document.querySelector("#sidebar");
+  sidebar.addEventListener("click", (e) => {
+    const target = e.target.closest(".question-icon");
+    if (!target) return;
+    const index = parseInt(target.textContent) - 1;
+    data.currentQuestionIndex = index;
+    displayQuestion(
+      data.questionDiv,
+      data.questions,
+      data.currentQuestionIndex,
+      data.userAnswers
+    );
+    toggleNextBtn({
+      nextBtn: document.querySelector(".next-btn"),
+      ...data,
+    });
+    togglePreviousBtn({
+      previousBtn: document.querySelector(".previous-btn"),
+      ...data,
+    });
+  });
 }
 
-// Helpers
 function checkEnableSubmit(answers, button, questions) {
   button.disabled = Object.keys(answers).length !== questions.length;
 }
 function getResult(answers, questions) {
-  let result = 0;
+  let totalScore = 0;
+  let correctAnswersNumber = 0;
   for (let i = 0; i < questions.length; i++) {
-    if (answers[i].isRightAnswer) result = result + 1 / questions.length;
+    if (answers[i] == questions[i].correctAnswer) {
+      totalScore = totalScore + 1 / questions.length;
+      correctAnswersNumber++;
+    }
   }
-  return result * 100;
+  totalScore = totalScore * 100;
+  const time = document.querySelector(".timer").textContent;
+  const result = {
+    totalScore,
+    time,
+    answers: {
+      correct: correctAnswersNumber,
+      incorrect: questions.length - correctAnswersNumber,
+    },
+  };
+  return result;
 }
