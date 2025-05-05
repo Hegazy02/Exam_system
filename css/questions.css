@@ -1,4 +1,4 @@
-@import url('main.css');
+@import url('/archiveMain.css');
 
 #categories-layout {
     z-index: 1;
@@ -14,17 +14,25 @@
     width: 100%;
     margin: 50px auto;
     color: #ffffffad;
+    font-weight: bold;
+
 }
 
-p{
+#categories-layout p {
     margin-top: 10px;
+    color: #007BFF;
+    font-weight: bold;
+    font-size: 18px;
+
 }
 
 header {
     display: flex;
     flex-direction: column;
 }
-
+.question h3{
+height: 40px;
+}
 #category {
     display: flex;
     flex-direction: column;
@@ -32,7 +40,7 @@ header {
 }
 
 .category-btn {
-    padding:13px;
+    padding: 13px;
     margin-top: 10px;
     cursor: pointer;
     border-radius: 5px;
@@ -40,11 +48,14 @@ header {
     background-color: #ffffffcc;
     /* color: var(--main-color); */
     font-weight: bold;
+    font-size: 17px;
 }
 
-.category-btn:hover{
+.category-btn:hover {
     background-color: #030321d0;
-    color:  #ffffffad;
+    color: #ffffffad;
+    font-weight: bold;
+
 }
 
 .loading-screen {
@@ -91,15 +102,17 @@ header {
     flex-direction: column;
     gap: 20px;
     max-width: 600px;
+    min-width: 600px;
+    border-radius: 10px;
     width: 100%;
     background-color: #ffffff15;
-   padding: 20px;
+    padding: 20px;
     z-index: 1;
-}
-.questions-layout section:not(#loading-nav){
     backdrop-filter: blur(10px);
-
+    color: #ffffffad;
 }
+
+
 .questions-layout aside {
     display: flex;
     flex-wrap: wrap;
@@ -130,7 +143,6 @@ header {
 
 .option:hover {
     background-color: var(--gray-color);
-    /* color: white; */
 }
 
 .btns {
@@ -155,7 +167,7 @@ header {
     cursor: pointer;
     border-radius: 5px;
     border: none;
-    background-color: var(--green-color);
+    background-color: #007BFF;
     color: white;
     font-weight: bold;
 
@@ -172,18 +184,23 @@ button:disabled {
     top: 0;
     left: 0;
     height: 10px;
+    width: 0;
     background-color: #007BFF;
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
-
+    transition: width 1s linear;
+    z-index: 100;
 }
+
+
+
 
 #flag::after {
     content: "\f024";
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     font-size: 20px;
-    color: var(--main-color);
+    color: #007BFF;
     cursor: pointer;
 }
 
@@ -192,14 +209,16 @@ button:disabled {
     justify-content: space-between;
     align-items: center;
 }
-#sidebar{
+
+#sidebar {
     z-index: 1;
 }
+
 .question-icon {
     width: 35px;
     height: 35px;
     border-radius: 50%;
-    background-color: var(--gray-color);
+    background-color: #ffffff79;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -207,22 +226,23 @@ button:disabled {
 }
 
 .active-question {
-    background-color: #666fa791;
-    color: white;
+    background-color: #ffffffe0;
+    color: black;
+
 }
 
 .flagged-question,
 .flagged-and-answered-question {
-    background-color: red;
+    background-color: #007BFF;
     color: white;
 }
 
 .flagged-and-active-question {
-    background-color: rgb(125, 48, 48);
+    background-color: #007BFF;
     color: white;
 }
 
 .answered-question {
-    background-color: var(--main-color);
+    background-color: #39398e;
     color: white;
 }
