@@ -1,18 +1,29 @@
-@import url('./main.css');
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Fira Code', monospace;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  height: 100vh;
+  justify-content: center;
+}
 
 #login-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
   background-color: #ffffff15;
   padding: 20px;
   backdrop-filter: blur(10px);
-
   border-radius: 5px;
   box-shadow: 0 0 30px #dbd6d61f;
-  display: flex;
-  flex-direction: column;
-  max-width: 400px;
   gap: 10px;
   position: absolute;
-  width: 100%;
 }
 
 #login-form label,
@@ -28,6 +39,7 @@
   width: 100%;
   padding: 10px;
   border-color: #ffffff80;
+  cursor: pointer;
   border-radius: 5px;
   background-color: #0303216b;
   color: #ffffff80;

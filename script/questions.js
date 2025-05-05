@@ -50,7 +50,7 @@ function createQuestionsLayout() {
     ["questions-layout"],
     `
     <aside id="sidebar"></aside>
-    <section>
+    <section class="question-section">
       <div id="loading-nav"></div>
       <div id="header">
         <div class="timer"></div>
@@ -80,6 +80,8 @@ function createQuestionLayout() {
 
 function startExam(questions, layout) {
   const userAnswers = {};
+  const startTime = new Date();
+  localStorage.setItem("examStartTime", startTime.toISOString());
   let currentQuestionIndex = 0;
   const duration = 180;
   const questionDiv = createQuestionLayout();
@@ -190,13 +192,34 @@ function toggleNextBtn(data) {
 function togglePreviousBtn(data) {
   data.previousBtn.disabled = data.currentQuestionIndex === 0;
 }
+
 function setupSubmitHandler(data) {
   data.submitBtn.addEventListener("click", () => {
-    const result = getResult(data.userAnswers, data.questions);
-    window.location.href = `./login.html?result=${JSON.stringify(result)}`;
 
+    const startTime = new Date(localStorage.getItem("examStartTime"));
+    const endTime = new Date();
+    const elapsedSeconds = Math.floor((endTime - startTime) / 1000);
+    const minutes = Math.floor(elapsedSeconds / 60);
+    const seconds = elapsedSeconds % 60;
+    const timeSpent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    
+
+
+
+    const result = getResult(data.userAnswers, data.questions);
+    
+    localStorage.setItem("examResult", JSON.stringify({
+      score: result.totalScore,
+      correct: result.answers.correct,
+      incorrect: result.answers.incorrect,
+      time: timeSpent
+
+    }));
+
+    window.location.href = "results.html";
   });
-}
+} 
+
 
 function setupFlagHandler(data) {
   const flagBtn = document.querySelector("#flag");
@@ -227,7 +250,7 @@ function startTimer(duration, layout) {
     updateTimer();
     if (--timer < 0) {
       clearInterval(interval);
-      window.location.href = "../html/login.html";
+      window.location.href = "/results.html";
     }
   }, 1000);
   increaseLoadingNav(loadingNav, duration);
@@ -308,24 +331,25 @@ function setupSidebarClickHandler(data) {
 function checkEnableSubmit(answers, button, questions) {
   button.disabled = Object.keys(answers).length !== questions.length;
 }
+
 function getResult(answers, questions) {
-  let totalScore = 0;
   let correctAnswersNumber = 0;
+
   for (let i = 0; i < questions.length; i++) {
-    if (answers[i] == questions[i].correctAnswer) {
-      totalScore = totalScore + 1 / questions.length;
+    if (answers[i]?.isRightAnswer) {
       correctAnswersNumber++;
     }
   }
-  totalScore = totalScore * 100;
+
+  const totalScore = (correctAnswersNumber / questions.length) * 100;
   const time = document.querySelector(".timer").textContent;
-  const result = {
+
+  return {
     totalScore,
     time,
     answers: {
       correct: correctAnswersNumber,
-      incorrect: questions.length - correctAnswersNumber,
-    },
+      incorrect: questions.length - correctAnswersNumber
+    }
   };
-  return result;
 }

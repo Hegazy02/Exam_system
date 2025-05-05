@@ -1,3 +1,12 @@
+function getUsers() {
+  return JSON.parse(localStorage.getItem("users")) ?? [];
+}
+
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.com+$/;
+  return emailRegex.test(email);
+}
+
 function isValidUserName(userName) {
   const userNameRegex = /^[a-zA-Z0-9]+$/;
   return userNameRegex.test(userName);
@@ -12,19 +21,20 @@ function doPasswordsMatch(password, confirmPassword) {
   return password === confirmPassword;
 }
 
-function createUser(userName, password, users, errorMessage) {
-  const user = { userName, password };
+function saveUser(userName, email, password, users, errorMessage) {
+  const user = { userName, email, password };
   if (isUserExists(userName, users, errorMessage)) {
-    return false;
+      return false;
   }
   users.push(user);
-  saveToLocalStorage("users", users);
+  localStorage.setItem("users", JSON.stringify(users));
   return true;
 }
+
 function isUserExists(userName, users, errorMessage) {
   if (users.some((user) => user.userName === userName)) {
-    displayElement(errorMessage, "User name already exists.");
-    return true;
+      displayElement(errorMessage, "User name already exists.");
+      return true;
   }
   hideElement(errorMessage);
   return false;
@@ -34,6 +44,7 @@ function displayElement(element, text) {
   element.textContent = text;
   element.style.display = "block";
 }
+
 function hideElement(element) {
   element.style.display = "none";
 }
@@ -50,16 +61,18 @@ function clearError(element) {
 function validate(isValidInput, input, element, errorMessage) {
   let isValid = true;
   if (!isValidInput) {
-    displayError(element, errorMessage, input);
-    isValid = false;
+      displayError(element, errorMessage, input);
+      isValid = false;
   } else {
-    input.classList.remove("error-border");
-    clearError(element);
+      input.classList.remove("error-border");
+      clearError(element);
   }
   return isValid;
 }
+
 function validateSignUpInputs(
   userNameInput,
+  emailInput,
   passwordInput,
   confirmPasswordInput,
   errors
@@ -67,34 +80,45 @@ function validateSignUpInputs(
   let isValid = true;
 
   if (
-    !validate(
-      isValidUserName(userNameInput.value),
-      userNameInput,
-      errors.userName,
-      "Invalid username. Only letters and numbers allowed."
-    )
+      !validate(
+          isValidUserName(userNameInput.value),
+          userNameInput,
+          errors.userName,
+          "Invalid username. Only letters and numbers allowed."
+      )
   ) {
-    isValid = false;
+      isValid = false;
   }
   if (
-    !validate(
-      isValidPassword(passwordInput.value),
-      passwordInput,
-      errors.password,
-      "Password must be at least 8 characters long."
-    )
+      !validate(
+          isValidEmail(emailInput.value),
+          emailInput,
+          errors.email,
+          "Invalid email format."
+      )
   ) {
-    isValid = false;
+      isValid = false;
+  }
+
+  if (
+      !validate(
+          isValidPassword(passwordInput.value),
+          passwordInput,
+          errors.password,
+          "Password must be at least 8 characters long."
+      )
+  ) {
+      isValid = false;
   }
   if (
-    !validate(
-      doPasswordsMatch(passwordInput.value, confirmPasswordInput.value),
-      confirmPasswordInput,
-      errors.confirmPassword,
-      "Password must be at least 8 characters long."
-    )
+      !validate(
+          doPasswordsMatch(passwordInput.value, confirmPasswordInput.value),
+          confirmPasswordInput,
+          errors.confirmPassword,
+          "Password does not match"
+      )
   ) {
-    isValid = false;
+      isValid = false;
   }
 
   return isValid;
@@ -104,96 +128,85 @@ function signUpPage() {
   const signUpBtn = document.getElementById("signUp-btn");
   const userNameInput = document.getElementById("userName");
   const passwordInput = document.getElementById("password");
+  const emailInput = document.getElementById("email");
   const confirmPasswordInput = document.getElementById("confirm-password");
   const errorMessage = document.getElementById("error-message");
   const successMessage = document.getElementById("success-message");
 
   const errors = {
-    userName: document.getElementById("userName-error"),
-    password: document.getElementById("password-error"),
-    confirmPassword: document.getElementById("confirm-password-error"),
+      userName: document.getElementById("userName-error"),
+      email: document.getElementById("email-error"),
+      password: document.getElementById("password-error"),
+      confirmPassword: document.getElementById("confirm-password-error"),
   };
+
   userNameInput.addEventListener("input", () => {
-    validate(
-      isValidUserName(userNameInput.value),
-      userNameInput,
-      errors.userName,
-      "Invalid username. Only letters and numbers allowed."
-    );
+      validate(
+          isValidUserName(userNameInput.value),
+          userNameInput,
+          errors.userName,
+          "Invalid username. Only letters and numbers allowed."
+      );
+  });
+
+  emailInput.addEventListener("input", () => {
+      validate(
+          isValidEmail(emailInput.value),
+          emailInput,
+          errors.email,
+          "Invalid email format."
+      );
   });
 
   passwordInput.addEventListener("input", () => {
-    validate(
-      isValidPassword(passwordInput.value),
-      passwordInput,
-      errors.password,
-      "Password must be at least 8 characters long."
-    );
+      validate(
+          isValidPassword(passwordInput.value),
+          passwordInput,
+          errors.password,
+          "Password must be at least 8 characters long."
+      );
   });
 
   confirmPasswordInput.addEventListener("input", () => {
-    validate(
-      doPasswordsMatch(passwordInput.value, confirmPasswordInput.value),
-      confirmPasswordInput,
-      errors.confirmPassword,
-      "Password does not match."
-    );
+      validate(
+          doPasswordsMatch(passwordInput.value, confirmPasswordInput.value),
+          confirmPasswordInput,
+          errors.confirmPassword,
+          "Password does not match."
+      );
   });
+
   signUpBtn.addEventListener("click", (e) => {
-    e.preventDefault();
+      e.preventDefault();
 
-    const isFormValid = validateSignUpInputs(
-      userNameInput,
-      passwordInput,
-      confirmPasswordInput,
-      errors
-    );
+      const isFormValid = validateSignUpInputs(
+          userNameInput,
+          emailInput,
+          passwordInput,
+          confirmPasswordInput,
+          errors
+      );
 
-    if (!isFormValid) return;
-    const users = getFromLocalStorage("users");
-    console.log(users);
-    const isUserCreated = createUser(
-      userNameInput.value,
-      passwordInput.value,
-      users,
-      errorMessage,
-      successMessage
-    );
+      if (!isFormValid) return;
 
-    if (!isUserCreated) return;
-    displayElement(successMessage, "User registered successfully.");
+      const users = getUsers();
 
-    setTimeout(() => {
-      window.location.href = "../html/login.html";
-    }, 1000);
+      const userSaved = saveUser(
+          userNameInput.value,
+          emailInput.value,
+          passwordInput.value,
+          users,
+          errorMessage
+      );
+
+      if (userSaved) {
+          displayElement(successMessage, "User registered successfully.");
+
+          setTimeout(() => {
+              window.location.href = "loginarchieve.html";
+          }, 1000);
+      }
   });
-}
-const secretKey = "my-secret-key";
-
-function encryptData(data) {
-  return CryptoJS.AES.encrypt(JSON.stringify(data), secretKey).toString();
-}
-
-function decryptData(ciphertext) {
-  const bytes = CryptoJS.AES.decrypt(ciphertext, secretKey);
-  const decryptedData = bytes.toString(CryptoJS.enc.Utf8);
-  return JSON.parse(decryptedData);
-}
-
-function saveToLocalStorage(key, data) {
-  try {
-    const encryptedData = encryptData(data);
-    localStorage.setItem(key, encryptedData);
-  } catch (error) {
-    console.log(error);
-    
-  }
-}
-
-function getFromLocalStorage(key) {
-  const encryptedData = localStorage.getItem(key);
-  if (!encryptedData) return [];
-  return decryptData(encryptedData);
 }
 
 signUpPage();
