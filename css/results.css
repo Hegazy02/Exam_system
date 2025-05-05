@@ -1,8 +1,8 @@
+@import url("main.css");
+
 body {
-    margin: 0;
-    padding: 0;
+
     background: #1a1a3a;
-    font-family: Arial, sans-serif;
 }
 
 #results-container {

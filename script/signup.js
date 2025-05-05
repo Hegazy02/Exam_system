@@ -203,7 +203,7 @@ function signUpPage() {
           displayElement(successMessage, "User registered successfully.");
 
           setTimeout(() => {
-              window.location.href = "loginarchieve.html";
+              window.location.href = "login.html";
           }, 1000);
       }
   });

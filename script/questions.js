@@ -195,31 +195,30 @@ function togglePreviousBtn(data) {
 
 function setupSubmitHandler(data) {
   data.submitBtn.addEventListener("click", () => {
-
     const startTime = new Date(localStorage.getItem("examStartTime"));
     const endTime = new Date();
     const elapsedSeconds = Math.floor((endTime - startTime) / 1000);
     const minutes = Math.floor(elapsedSeconds / 60);
     const seconds = elapsedSeconds % 60;
-    const timeSpent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-    
-
-
+    const timeSpent = `${String(minutes).padStart(2, "0")}:${String(
+      seconds
+    ).padStart(2, "0")}`;
 
     const result = getResult(data.userAnswers, data.questions);
-    
-    localStorage.setItem("examResult", JSON.stringify({
-      score: result.totalScore,
-      correct: result.answers.correct,
-      incorrect: result.answers.incorrect,
-      time: timeSpent
 
-    }));
+    localStorage.setItem(
+      "examResult",
+      JSON.stringify({
+        score: result.totalScore,
+        correct: result.answers.correct,
+        incorrect: result.answers.incorrect,
+        time: timeSpent,
+      })
+    );
 
-    window.location.href = "results.html";
+    window.location.replace("results.html");
   });
-} 
-
+}
 
 function setupFlagHandler(data) {
   const flagBtn = document.querySelector("#flag");
@@ -349,7 +348,7 @@ function getResult(answers, questions) {
     time,
     answers: {
       correct: correctAnswersNumber,
-      incorrect: questions.length - correctAnswersNumber
-    }
+      incorrect: questions.length - correctAnswersNumber,
+    },
   };
 }
