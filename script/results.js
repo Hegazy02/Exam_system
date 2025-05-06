@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   document.getElementById("retake-exam-btn").addEventListener("click", () => {
-    window.location.href = "questions.html";
+    window.location.href = "../html/questions.html";
   });
 
   document.getElementById("logout-btn").addEventListener("click", () => {

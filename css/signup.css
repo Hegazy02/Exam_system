@@ -1,3 +1,5 @@
+@import url("main.css");
+
 * {
   margin: 0;
   padding: 0;
@@ -30,7 +32,6 @@ body {
 #already-have-account,
 #do-not-have-account {
   margin-bottom: 5px;
-  /* font-weight: bold; */
   color: #ffffffad;
   display: block;
 }
@@ -43,7 +44,6 @@ body {
   border-radius: 5px;
   background-color: #0303216b;
   color: #ffffff80;
-  /* font-weight: bold; */
 }
 
 input:-webkit-autofill {
@@ -55,13 +55,11 @@ input:-webkit-autofill {
 
 #login-form input:hover::placeholder {
   color: #030321;
-  /* font-weight: bold; */
 }
 
 #login-form input:hover {
   background-color: #ffffffad;
   color: #030321;
-  /* font-weight: bold; */
 }
 
 #login-form button {
@@ -71,10 +69,8 @@ input:-webkit-autofill {
   border-radius: 5px;
   padding: 10px;
   cursor: pointer;
-  /* font-weight: bold; */
   box-shadow: 0 0 20px #000000;
   margin-top: 25px;
-  /* margin-bottom: 25px; */
 }
 
 #login-form button:hover {
@@ -95,8 +91,6 @@ input:-webkit-autofill {
 #error-message {
   display: none;
   color: #f0f0f0;
-  /* margin-top: 10px; */
-  /* margin-bottom: 10px; */
   background-color: red;
   border-radius: 5px;
   padding: 10px;
@@ -105,7 +99,6 @@ input:-webkit-autofill {
 #success-message {
   display: none;
   color: #f0f0f0;
-  /* margin-top: 10px; */
   background-color: green;
   border-radius: 5px;
   padding: 10px;

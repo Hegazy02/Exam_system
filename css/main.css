@@ -3,8 +3,7 @@
     --secondary-color: rgb(212, 207, 207);
     --gray-color: rgba(182, 178, 178, 0.123);
     --green-color: rgb(0, 128, 0);
-    font-family: Arial, sans-serif;
-
+    font-family: 'Fira Code', monospace;
 }
 
 * {

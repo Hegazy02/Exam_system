@@ -193,14 +193,13 @@ button:disabled {
     border-bottom-left-radius: 0;
     transition: width 1s linear;
     z-index: 100;
-    -webkit-appearance: none;
 }
 
 #flag::after {
     content: "\f024";
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
-    font-size: 20px;
+    font-size: 18px;
     color: #007BFF;
     cursor: pointer;
 }
