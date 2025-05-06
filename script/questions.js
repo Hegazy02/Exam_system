@@ -49,9 +49,9 @@ function createQuestionsLayout() {
     "div",
     ["questions-layout"],
     `
+    <div id="loading-nav"></div> 
     <aside id="sidebar"></aside>
     <section class="question-section">
-      <div id="loading-nav"></div>
       <div id="header">
         <div class="timer"></div>
         <div id="flag"></div>
@@ -104,6 +104,8 @@ function startExam(questions, layout) {
   };
 
   setupAnswerHandler(questionDiv, examData);
+  localStorage.setItem("currentQuestions", JSON.stringify(questions));
+
   setupNavigation(examData);
   setupSubmitHandler(examData);
   setupFlagHandler(examData);
@@ -147,6 +149,8 @@ function setupAnswerHandler(container, data) {
       selectedAnswer: parseInt(input.id),
       isRightAnswer: input.value === question.answer,
     };
+    localStorage.setItem("userAnswers", JSON.stringify(data.userAnswers));
+
 
     checkEnableSubmit(data.userAnswers, data.submitBtn, data.questions);
     renderSidebar(data.questions, index, data.userAnswers);
@@ -216,7 +220,7 @@ function setupSubmitHandler(data) {
       })
     );
 
-    window.location.replace("results.html");
+    window.location.replace("../html/results.html");
   });
 }
 
@@ -240,18 +244,41 @@ function setupFlagHandler(data) {
   });
 }
 
+
 function startTimer(duration, layout) {
   const display = layout.querySelector(".timer");
   const loadingNav = layout.querySelector("#loading-nav");
   let timer = duration;
   updateTimer();
+
   const interval = setInterval(() => {
     updateTimer();
     if (--timer < 0) {
       clearInterval(interval);
-      window.location.href = "/results.html";
+
+      const startTime = new Date(localStorage.getItem("examStartTime"));
+      const endTime = new Date();
+      const elapsedSeconds = Math.floor((endTime - startTime) / 1000);
+      const minutes = Math.floor(elapsedSeconds / 60);
+      const seconds = elapsedSeconds % 60;
+      const timeSpent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+
+      const questions = JSON.parse(localStorage.getItem("currentQuestions") || "[]");
+      const userAnswers = JSON.parse(localStorage.getItem("userAnswers") || "{}");
+
+      const result = getResult(userAnswers, questions);
+
+      localStorage.setItem("examResult", JSON.stringify({
+        score: result.totalScore,
+        correct: result.answers.correct,
+        incorrect: result.answers.incorrect,
+        time: timeSpent,
+      }));
+
+      window.location.href = "../html/results.html";
     }
   }, 1000);
+
   increaseLoadingNav(loadingNav, duration);
 
   function updateTimer() {
@@ -265,9 +292,20 @@ function startTimer(duration, layout) {
 function increaseLoadingNav(nav, duration) {
   const step = 100 / duration;
   let width = 0;
+  let secondsPassed = 0;
+
   const interval = setInterval(() => {
     if (width >= 100) return clearInterval(interval);
+
     width += step;
+    secondsPassed++;
+
+    if (secondsPassed >= 122) {
+      nav.style.backgroundColor = "#FF0000";
+    } else {
+      nav.style.backgroundColor = "#007BFF";
+    }
+
     nav.style.width = `${width}%`;
   }, 1000);
 }

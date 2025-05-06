@@ -30,9 +30,11 @@ header {
     display: flex;
     flex-direction: column;
 }
-.question h3{
-height: 40px;
+
+.question h3 {
+    height: 40px;
 }
+
 #category {
     display: flex;
     flex-direction: column;
@@ -40,13 +42,12 @@ height: 40px;
 }
 
 .category-btn {
-    padding: 13px;
+    padding: 10px;
     margin-top: 10px;
     cursor: pointer;
     border-radius: 5px;
     border: none;
     background-color: #ffffffcc;
-    /* color: var(--main-color); */
     font-weight: bold;
     font-size: 17px;
 }
@@ -183,17 +184,17 @@ button:disabled {
     position: absolute;
     top: 0;
     left: 0;
-    height: 10px;
+    height: 15px;
     width: 0;
     background-color: #007BFF;
-    border-top-right-radius: 6px;
-    border-bottom-right-radius: 6px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
     transition: width 1s linear;
     z-index: 100;
+    -webkit-appearance: none;
 }
-
-
-
 
 #flag::after {
     content: "\f024";
@@ -212,6 +213,12 @@ button:disabled {
 
 #sidebar {
     z-index: 1;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    box-sizing: border-box;
 }
 
 .question-icon {
