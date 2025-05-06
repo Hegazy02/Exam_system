@@ -23,18 +23,18 @@ function doPasswordsMatch(password, confirmPassword) {
 
 function saveUser(userName, email, password, users, errorMessage) {
   const user = { userName, email, password };
-  if (isUserExists(userName, users, errorMessage)) {
-      return false;
+  if (isEmailExists(email, users, errorMessage)) {
+    return false;
   }
   users.push(user);
   localStorage.setItem("users", JSON.stringify(users));
   return true;
 }
 
-function isUserExists(userName, users, errorMessage) {
-  if (users.some((user) => user.userName === userName)) {
-      displayElement(errorMessage, "User name already exists.");
-      return true;
+function isEmailExists(email, users, errorMessage) {
+  if (users.some((user) => user.email === email)) {
+    displayElement(errorMessage, "User email already exists.");
+    return true;
   }
   hideElement(errorMessage);
   return false;
@@ -61,11 +61,11 @@ function clearError(element) {
 function validate(isValidInput, input, element, errorMessage) {
   let isValid = true;
   if (!isValidInput) {
-      displayError(element, errorMessage, input);
-      isValid = false;
+    displayError(element, errorMessage, input);
+    isValid = false;
   } else {
-      input.classList.remove("error-border");
-      clearError(element);
+    input.classList.remove("error-border");
+    clearError(element);
   }
   return isValid;
 }
@@ -80,45 +80,45 @@ function validateSignUpInputs(
   let isValid = true;
 
   if (
-      !validate(
-          isValidUserName(userNameInput.value),
-          userNameInput,
-          errors.userName,
-          "Invalid username. Only letters and numbers allowed."
-      )
+    !validate(
+      isValidUserName(userNameInput.value),
+      userNameInput,
+      errors.userName,
+      "Invalid username. Only letters and numbers allowed."
+    )
   ) {
-      isValid = false;
+    isValid = false;
   }
   if (
-      !validate(
-          isValidEmail(emailInput.value),
-          emailInput,
-          errors.email,
-          "Invalid email format."
-      )
+    !validate(
+      isValidEmail(emailInput.value),
+      emailInput,
+      errors.email,
+      "Invalid email format."
+    )
   ) {
-      isValid = false;
+    isValid = false;
   }
 
   if (
-      !validate(
-          isValidPassword(passwordInput.value),
-          passwordInput,
-          errors.password,
-          "Password must be at least 8 characters long."
-      )
+    !validate(
+      isValidPassword(passwordInput.value),
+      passwordInput,
+      errors.password,
+      "Password must be at least 8 characters long."
+    )
   ) {
-      isValid = false;
+    isValid = false;
   }
   if (
-      !validate(
-          doPasswordsMatch(passwordInput.value, confirmPasswordInput.value),
-          confirmPasswordInput,
-          errors.confirmPassword,
-          "Password does not match"
-      )
+    !validate(
+      doPasswordsMatch(passwordInput.value, confirmPasswordInput.value),
+      confirmPasswordInput,
+      errors.confirmPassword,
+      "Password does not match"
+    )
   ) {
-      isValid = false;
+    isValid = false;
   }
 
   return isValid;
@@ -134,78 +134,78 @@ function signUpPage() {
   const successMessage = document.getElementById("success-message");
 
   const errors = {
-      userName: document.getElementById("userName-error"),
-      email: document.getElementById("email-error"),
-      password: document.getElementById("password-error"),
-      confirmPassword: document.getElementById("confirm-password-error"),
+    userName: document.getElementById("userName-error"),
+    email: document.getElementById("email-error"),
+    password: document.getElementById("password-error"),
+    confirmPassword: document.getElementById("confirm-password-error"),
   };
 
   userNameInput.addEventListener("input", () => {
-      validate(
-          isValidUserName(userNameInput.value),
-          userNameInput,
-          errors.userName,
-          "Invalid username. Only letters and numbers allowed."
-      );
+    validate(
+      isValidUserName(userNameInput.value),
+      userNameInput,
+      errors.userName,
+      "Invalid username. Only letters and numbers allowed."
+    );
   });
 
   emailInput.addEventListener("input", () => {
-      validate(
-          isValidEmail(emailInput.value),
-          emailInput,
-          errors.email,
-          "Invalid email format."
-      );
+    validate(
+      isValidEmail(emailInput.value),
+      emailInput,
+      errors.email,
+      "Invalid email format."
+    );
   });
 
   passwordInput.addEventListener("input", () => {
-      validate(
-          isValidPassword(passwordInput.value),
-          passwordInput,
-          errors.password,
-          "Password must be at least 8 characters long."
-      );
+    validate(
+      isValidPassword(passwordInput.value),
+      passwordInput,
+      errors.password,
+      "Password must be at least 8 characters long."
+    );
   });
 
   confirmPasswordInput.addEventListener("input", () => {
-      validate(
-          doPasswordsMatch(passwordInput.value, confirmPasswordInput.value),
-          confirmPasswordInput,
-          errors.confirmPassword,
-          "Password does not match."
-      );
+    validate(
+      doPasswordsMatch(passwordInput.value, confirmPasswordInput.value),
+      confirmPasswordInput,
+      errors.confirmPassword,
+      "Password does not match."
+    );
   });
 
   signUpBtn.addEventListener("click", (e) => {
-      e.preventDefault();
+    e.preventDefault();
 
-      const isFormValid = validateSignUpInputs(
-          userNameInput,
-          emailInput,
-          passwordInput,
-          confirmPasswordInput,
-          errors
-      );
+    const isFormValid = validateSignUpInputs(
+      userNameInput,
+      emailInput,
+      passwordInput,
+      confirmPasswordInput,
+      errors
+    );
 
-      if (!isFormValid) return;
+    if (!isFormValid) return;
 
-      const users = getUsers();
+    const users = getUsers();
 
-      const userSaved = saveUser(
-          userNameInput.value,
-          emailInput.value,
-          passwordInput.value,
-          users,
-          errorMessage
-      );
+    const userSaved = saveUser(
+      userNameInput.value,
+      emailInput.value,
+      passwordInput.value,
+      users,
+      errorMessage
+    );
 
-      if (userSaved) {
-          displayElement(successMessage, "User registered successfully.");
+    if (userSaved) {
+      displayElement(successMessage, "User registered successfully.");
 
-          setTimeout(() => {
-              window.location.href = "login.html";
-          }, 1000);
-      }
+      setTimeout(() => {
+        window.location.replace("login.html");
+      }, 1000);
+    }
   });
 }
 

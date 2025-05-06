@@ -1,18 +1,23 @@
+function isValidPassword(password) {
+  const passwordRegex = /^[a-zA-Z0-9]{8,}$/;
+  return passwordRegex.test(password);
+}
+function isValidEmail(email) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.com+$/;
+  return emailRegex.test(email);
+}
 const loginButton = document.getElementById("login-btn");
-const userNameErrorMessage = document.getElementById("userName-error");
+const emailErrorMessage = document.getElementById("email-error");
 const passwordErrorMessage = document.getElementById("password-error");
 const errorMsg = document.getElementById("error-message");
-const userName = document.getElementById("userName");
+const email = document.getElementById("email");
 const password = document.getElementById("password");
 const signUpLink = document.getElementById("signup-link");
 
 password.addEventListener("input", passValidation);
-userName.addEventListener("input", userNameValidation);
+email.addEventListener("input", emailValidation);
 
-loginButton.addEventListener("click", (e) => {
-  e.preventDefault();
-  window.location.replace("../html/questions.html");
-});
+loginButton.addEventListener("click", checkLogin);
 
 function displayElement(element, text) {
   element.textContent = text;
@@ -26,35 +31,35 @@ function hideElement(element) {
 function checkLogin(e) {
   e.preventDefault();
   const isPasswordValid = passValidation();
-  const isUserNameValid = userNameValidation();
+  const isemailValid = emailValidation();
 
   hideElement(errorMsg);
-  let enteredUsername = userName.value;
+  let enteredemail = email.value;
   let enteredPassword = password.value;
 
-  if (isPasswordValid && isUserNameValid) {
+  if (isPasswordValid && isemailValid) {
     let users = JSON.parse(localStorage.getItem("users")) || [];
 
-    const user = users.find((user) => user.userName === enteredUsername);
+    const user = users.find((user) => user.email === enteredemail);
 
     if (user) {
       if (user.password === enteredPassword) {
         localStorage.setItem("currentUser", JSON.stringify(user));
 
         setTimeout(() => {
-          window.location.href = "signUp.html";
+          window.location.replace("../html/questions.html");
         }, 1000);
       } else {
-        displayElement(errorMsg, "Username or password is not correct!");
+        displayElement(errorMsg, "email or password is not correct!");
       }
     } else {
-      displayElement(errorMsg, "Username is not found!");
+      displayElement(errorMsg, "email is not found!");
     }
   }
 }
 
 function passValidation() {
-  if (password.value.length < 8) {
+  if (!isValidPassword(password.value)) {
     passwordErrorMessage.textContent = "Password must be more than 8 letters!";
     password.classList.add("error-border");
     return false;
@@ -65,14 +70,14 @@ function passValidation() {
   }
 }
 
-function userNameValidation() {
-  if (userName.value.length < 1) {
-    userNameErrorMessage.textContent = "Username shouldn't be empty!";
-    userName.classList.add("error-border");
+function emailValidation() {
+  if (!isValidEmail(email.value)) {
+    emailErrorMessage.textContent = "Enter a valid email!";
+    email.classList.add("error-border");
     return false;
   } else {
-    userNameErrorMessage.textContent = "";
-    userName.classList.remove("error-border");
+    emailErrorMessage.textContent = "";
+    email.classList.remove("error-border");
     return true;
   }
 }
