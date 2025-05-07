@@ -80,13 +80,14 @@ function createQuestionLayout() {
 
 function startExam(questions, layout) {
   const userAnswers = {};
-  const startTime = new Date();
-  localStorage.setItem("examStartTime", startTime.toISOString());
   let currentQuestionIndex = 0;
-  const duration = 180;
+  const timer = 180;
+  const startTime = new Date();
+
   const questionDiv = createQuestionLayout();
   layout.querySelector("#header").after(questionDiv);
-  startTimer(duration, layout);
+  const timerData = { timer, layout, startTime, questions, userAnswers };
+  startTimer(timerData);
   displayQuestion(questionDiv, questions, currentQuestionIndex, userAnswers);
 
   const submitBtn = layout.querySelector(".submit-btn");
@@ -104,10 +105,9 @@ function startExam(questions, layout) {
   };
 
   setupAnswerHandler(questionDiv, examData);
-  localStorage.setItem("currentQuestions", JSON.stringify(questions));
 
   setupNavigation(examData);
-  setupSubmitHandler(examData);
+  setupSubmitHandler(examData, startTime);
   setupFlagHandler(examData);
   setupSidebarClickHandler(examData);
 }
@@ -196,17 +196,9 @@ function togglePreviousBtn(data) {
   data.previousBtn.disabled = data.currentQuestionIndex === 0;
 }
 
-function setupSubmitHandler(data) {
+function setupSubmitHandler(data, startTime) {
   data.submitBtn.addEventListener("click", () => {
-    const startTime = new Date(localStorage.getItem("examStartTime"));
-    const endTime = new Date();
-    const elapsedSeconds = Math.floor((endTime - startTime) / 1000);
-    const minutes = Math.floor(elapsedSeconds / 60);
-    const seconds = elapsedSeconds % 60;
-    const timeSpent = `${String(minutes).padStart(2, "0")}:${String(
-      seconds
-    ).padStart(2, "0")}`;
-
+    const timeSpent = getTimeSpent(startTime);
     const result = getResult(data.userAnswers, data.questions);
 
     localStorage.setItem(
@@ -222,7 +214,16 @@ function setupSubmitHandler(data) {
     window.location.replace("../html/results.html");
   });
 }
-
+function getTimeSpent(startTime) {
+  const endTime = new Date();
+  const elapsedSeconds = Math.floor((endTime - startTime) / 1000);
+  const minutes = Math.floor(elapsedSeconds / 60);
+  const seconds = elapsedSeconds % 60;
+  const timeSpent = `${String(minutes).padStart(2, "0")}:${String(
+    seconds
+  ).padStart(2, "0")}`;
+  return timeSpent;
+}
 function setupFlagHandler(data) {
   const flagBtn = document.querySelector("#flag");
   const sidebar = document.querySelector("#sidebar");
@@ -243,35 +244,16 @@ function setupFlagHandler(data) {
   });
 }
 
-function startTimer(duration, layout) {
+function startTimer({ timer, layout, startTime, questions, userAnswers }) {
   const display = layout.querySelector(".timer");
   const loadingNav = layout.querySelector("#loading-nav");
-  let timer = duration;
   updateTimer();
-
   const interval = setInterval(() => {
     updateTimer();
     if (--timer < 0) {
       clearInterval(interval);
-
-      const startTime = new Date(localStorage.getItem("examStartTime"));
-      const endTime = new Date();
-      const elapsedSeconds = Math.floor((endTime - startTime) / 1000);
-      const minutes = Math.floor(elapsedSeconds / 60);
-      const seconds = elapsedSeconds % 60;
-      const timeSpent = `${String(minutes).padStart(2, "0")}:${String(
-        seconds
-      ).padStart(2, "0")}`;
-
-      const questions = JSON.parse(
-        localStorage.getItem("currentQuestions") || "[]"
-      );
-      const userAnswers = JSON.parse(
-        localStorage.getItem("userAnswers") || "{}"
-      );
-
+      const timeSpent = getTimeSpent(startTime);
       const result = getResult(userAnswers, questions);
-
       localStorage.setItem(
         "examResult",
         JSON.stringify({
@@ -286,7 +268,7 @@ function startTimer(duration, layout) {
     }
   }, 1000);
 
-  increaseLoadingNav(loadingNav, duration);
+  increaseLoadingNav(loadingNav, timer);
 
   function updateTimer() {
     const min = String(Math.floor(timer / 60)).padStart(2, "0");
@@ -307,7 +289,7 @@ function increaseLoadingNav(nav, duration) {
     width += step;
     secondsPassed++;
 
-    if (secondsPassed >= 122) {
+    if (secondsPassed / duration >= 0.75) {
       nav.style.backgroundColor = "#FF0000";
     } else {
       nav.style.backgroundColor = "#007BFF";
@@ -371,6 +353,7 @@ function setupSidebarClickHandler(data) {
     });
   });
 }
+
 
 function checkEnableSubmit(answers, button, questions) {
   button.disabled = Object.keys(answers).length !== questions.length;
