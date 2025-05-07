@@ -18,11 +18,11 @@ async function handleCategoryClick(button) {
 
   try {
     const questions = await fetchQuestions(button.id);
-    shuffle(questions);
+    const shuffledQuestions = shuffle(questions);
     setTimeout(() => {
       loadingScreen.remove();
       const layout = createQuestionsLayout();
-      startExam(questions, layout);
+      startExam(shuffledQuestions, layout);
     }, 1000);
   } catch (error) {
     console.error("Error fetching questions:", error);
@@ -34,11 +34,12 @@ async function fetchQuestions(id) {
   return response.json();
 }
 function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
+  const tempArray = [...array];
+  for (let i = tempArray.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+    [tempArray[i], tempArray[j]] = [tempArray[j], tempArray[i]];
   }
-  return array;
+  return tempArray;
 }
 function createLoadingScreen() {
   return createElement("div", ["loading-screen"], '<div class="loader"></div>');
@@ -200,17 +201,7 @@ function setupSubmitHandler(data, startTime) {
   data.submitBtn.addEventListener("click", () => {
     const timeSpent = getTimeSpent(startTime);
     const result = getResult(data.userAnswers, data.questions);
-
-    localStorage.setItem(
-      "examResult",
-      JSON.stringify({
-        score: result.totalScore,
-        correct: result.answers.correct,
-        incorrect: result.answers.incorrect,
-        time: timeSpent,
-      })
-    );
-
+    setResult(timeSpent, result);
     window.location.replace("../html/results.html");
   });
 }
@@ -245,6 +236,7 @@ function setupFlagHandler(data) {
 }
 
 function startTimer({ timer, layout, startTime, questions, userAnswers }) {
+  const originalTimer = timer;
   const display = layout.querySelector(".timer");
   const loadingNav = layout.querySelector("#loading-nav");
   updateTimer();
@@ -254,16 +246,7 @@ function startTimer({ timer, layout, startTime, questions, userAnswers }) {
       clearInterval(interval);
       const timeSpent = getTimeSpent(startTime);
       const result = getResult(userAnswers, questions);
-      localStorage.setItem(
-        "examResult",
-        JSON.stringify({
-          score: result.totalScore,
-          correct: result.answers.correct,
-          incorrect: result.answers.incorrect,
-          time: timeSpent,
-        })
-      );
-
+      setResult(timeSpent, result);
       window.location.replace("../html/results.html");
     }
   }, 1000);
@@ -274,8 +257,21 @@ function startTimer({ timer, layout, startTime, questions, userAnswers }) {
     const min = String(Math.floor(timer / 60)).padStart(2, "0");
     const sec = String(timer % 60).padStart(2, "0");
     display.textContent = `${min}:${sec}`;
-    display.classList.toggle("warning", timer < 60);
+    if (timer / originalTimer <= 0.25) {
+      display.classList.add("warning");
+    }
   }
+}
+function setResult(timeSpent, result) {
+  localStorage.setItem(
+    "examResult",
+    JSON.stringify({
+      score: result.totalScore,
+      correct: result.answers.correct,
+      incorrect: result.answers.incorrect,
+      time: timeSpent,
+    })
+  );
 }
 
 function increaseLoadingNav(nav, duration) {
@@ -354,23 +350,19 @@ function setupSidebarClickHandler(data) {
   });
 }
 
-
 function checkEnableSubmit(answers, button, questions) {
   button.disabled = Object.keys(answers).length !== questions.length;
 }
 
 function getResult(answers, questions) {
   let correctAnswersNumber = 0;
-
   for (let i = 0; i < questions.length; i++) {
     if (answers[i]?.isRightAnswer) {
       correctAnswersNumber++;
     }
   }
-
   const totalScore = (correctAnswersNumber / questions.length) * 100;
   const time = document.querySelector(".timer").textContent;
-
   return {
     totalScore,
     time,
