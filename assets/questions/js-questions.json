@@ -1,0 +1,63 @@
+[
+    {
+      "question": "What is the correct syntax to declare a variable in JavaScript?",
+      "options": ["var myVar;", "let = myVar;", "dim myVar;", "int myVar;"],
+      "answer": "var myVar;",
+      "explanation": "JavaScript variables can be declared using `var`, `let`, or `const`."
+    },
+    {
+      "question": "Which company developed JavaScript?",
+      "options": ["Microsoft", "Sun Microsystems", "Netscape", "Oracle"],
+      "answer": "Netscape",
+      "explanation": "JavaScript was developed by Netscape in the mid-1990s."
+    },
+    {
+      "question": "Which of the following is a JavaScript data type?",
+      "options": ["Float", "Character", "Boolean", "Double"],
+      "answer": "Boolean",
+      "explanation": "JavaScript includes data types like Boolean, String, Number, Object, and undefined."
+    },
+    {
+      "question": "What is the output of `typeof null`?",
+      "options": ["null", "object", "undefined", "boolean"],
+      "answer": "object",
+      "explanation": "`typeof null` returns 'object' due to a long-standing bug in JavaScript."
+    },
+    {
+      "question": "How do you write a comment in JavaScript?",
+      "options": ["<!-- This is a comment -->", "# This is a comment", "// This is a comment", "** This is a comment **"],
+      "answer": "// This is a comment",
+      "explanation": "Single-line comments in JavaScript begin with `//`."
+    },
+    {
+      "question": "Which operator is used to compare both value and type?",
+      "options": ["==", "=", "===", "!="],
+      "answer": "===",
+      "explanation": "`===` checks for strict equality, meaning both type and value must match."
+    },
+    {
+      "question": "What is the result of `2 + '2'` in JavaScript?",
+      "options": ["4", "22", "NaN", "undefined"],
+      "answer": "22",
+      "explanation": "JavaScript converts the number to a string and concatenates, resulting in '22'."
+    },
+    {
+      "question": "Which function converts a string to an integer?",
+      "options": ["parseInt()", "parse()", "int()", "Number()"],
+      "answer": "parseInt()",
+      "explanation": "`parseInt()` parses a string and returns an integer."
+    },
+    {
+      "question": "How can you create a function in JavaScript?",
+      "options": ["function:myFunc()", "function myFunc()", "def myFunc()", "create function myFunc()"],
+      "answer": "function myFunc()",
+      "explanation": "JavaScript functions are defined using the `function` keyword."
+    },
+    {
+      "question": "Which keyword is used to exit a loop early?",
+      "options": ["stop", "exit", "return", "break"],
+      "answer": "break",
+      "explanation": "`break` exits a loop immediately when executed."
+    }
+  ]
+  

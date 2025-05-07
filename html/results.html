@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Examination alults</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../css/background.css" />
+    <link rel="stylesheet" href="../css/results.css">
+</head>
+
+<body>
+    <canvas id="beamsCanvas"></canvas>
+
+    <div id="results-container">
+        <div class="results-header">
+            <h1>Examination Results</h1>
+            <div class="user-info">
+                <p>Username: <span id="username-display">Loading...</span></p>
+            </div>
+        </div>
+
+        <div class="results-card">
+            <div class="results-summary">
+                <div class="summary-item">
+                    <h3>Total Score</h3>
+                    <div class="score-circle" id="total-score">0%</div>
+                </div>
+                <div class="summary-item">
+                    <h3>Questions</h3>
+                    <p>Correct: <span id="correct-count">0</span></p>
+                    <p>Incorrect: <span id="incorrect-count">0</span></p>
+                </div>
+                <div class="summary-item">
+                    <h3>Time</h3>
+                    <div class="time-taken" id="time-taken">00:00</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button id="retake-exam-btn">Retake Exam</button>
+            <button id="logout-btn">Logout</button>
+        </div>
+    </div>
+
+    <script src="../script/results.js"></script>
+    <script src="../script/background.js"></script>
+</body>
+
+</html>
