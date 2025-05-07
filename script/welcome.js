@@ -3,7 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("welcome-message").textContent = `Welcome, ${username}!`;
 
     document.getElementById("start-btn").addEventListener("click", () => {
-        window.location.href = "../html/questions.html";
+        window.location.replace("../html/questions.html");
     });
 });
 
