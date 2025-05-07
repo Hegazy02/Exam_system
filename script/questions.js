@@ -151,7 +151,6 @@ function setupAnswerHandler(container, data) {
     };
     localStorage.setItem("userAnswers", JSON.stringify(data.userAnswers));
 
-
     checkEnableSubmit(data.userAnswers, data.submitBtn, data.questions);
     renderSidebar(data.questions, index, data.userAnswers);
   });
@@ -244,7 +243,6 @@ function setupFlagHandler(data) {
   });
 }
 
-
 function startTimer(duration, layout) {
   const display = layout.querySelector(".timer");
   const loadingNav = layout.querySelector("#loading-nav");
@@ -261,21 +259,30 @@ function startTimer(duration, layout) {
       const elapsedSeconds = Math.floor((endTime - startTime) / 1000);
       const minutes = Math.floor(elapsedSeconds / 60);
       const seconds = elapsedSeconds % 60;
-      const timeSpent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      const timeSpent = `${String(minutes).padStart(2, "0")}:${String(
+        seconds
+      ).padStart(2, "0")}`;
 
-      const questions = JSON.parse(localStorage.getItem("currentQuestions") || "[]");
-      const userAnswers = JSON.parse(localStorage.getItem("userAnswers") || "{}");
+      const questions = JSON.parse(
+        localStorage.getItem("currentQuestions") || "[]"
+      );
+      const userAnswers = JSON.parse(
+        localStorage.getItem("userAnswers") || "{}"
+      );
 
       const result = getResult(userAnswers, questions);
 
-      localStorage.setItem("examResult", JSON.stringify({
-        score: result.totalScore,
-        correct: result.answers.correct,
-        incorrect: result.answers.incorrect,
-        time: timeSpent,
-      }));
+      localStorage.setItem(
+        "examResult",
+        JSON.stringify({
+          score: result.totalScore,
+          correct: result.answers.correct,
+          incorrect: result.answers.incorrect,
+          time: timeSpent,
+        })
+      );
 
-      window.location.href = "../html/results.html";
+      window.location.replace("../html/results.html");
     }
   }, 1000);
 
@@ -390,4 +397,3 @@ function getResult(answers, questions) {
     },
   };
 }
-

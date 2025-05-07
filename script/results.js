@@ -37,44 +37,44 @@ document.addEventListener("DOMContentLoaded", () => {
       message.classList.add("success");
       document.getElementById("success-screen").classList.remove("hidden");
       document.getElementById("score-success").textContent = Math.round(score);
-    
+
       setTimeout(() => {
         document.getElementById("success-screen").classList.add("hidden");
       }, 2000);
-      
+
       const canvas = document.getElementById("fireworksCanvas");
       canvas.classList.remove("hidden");
-      const ctx = canvas.getContext('2d');
-    
+      const ctx = canvas.getContext("2d");
+
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-    
+
       const fireworks = [];
-    
+
       class Firework {
         constructor(x, y) {
           this.x = x;
           this.y = y;
           this.particles = [];
-    
+
           for (let i = 0; i < 100; i++) {
             this.particles.push(new Particle(x, y));
           }
         }
-    
+
         update() {
-          this.particles.forEach(p => p.update());
+          this.particles.forEach((p) => p.update());
         }
-    
+
         draw() {
-          this.particles.forEach(p => p.draw());
+          this.particles.forEach((p) => p.draw());
         }
-    
+
         isDone() {
-          return this.particles.every(p => p.alpha <= 0);
+          return this.particles.every((p) => p.alpha <= 0);
         }
       }
-    
+
       class Particle {
         constructor(x, y) {
           this.x = x;
@@ -86,13 +86,13 @@ document.addEventListener("DOMContentLoaded", () => {
           this.alpha = 1;
           this.decay = Math.random() * 0.01 + 0.005;
         }
-    
+
         update() {
           this.x += Math.cos(this.angle) * this.speed;
           this.y += Math.sin(this.angle) * this.speed;
           this.alpha -= this.decay;
         }
-    
+
         draw() {
           ctx.save();
           ctx.globalAlpha = this.alpha;
@@ -103,12 +103,12 @@ document.addEventListener("DOMContentLoaded", () => {
           ctx.restore();
         }
       }
-    
+
       function animate() {
         requestAnimationFrame(animate);
-        ctx.fillStyle = 'rgba(3, 3, 33, 0.1)';
+        ctx.fillStyle = "rgba(3, 3, 33, 0.1)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
+
         fireworks.forEach((fw, index) => {
           fw.update();
           fw.draw();
@@ -117,32 +117,29 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
       }
-    
+
       function launchFirework() {
         const x = Math.random() * canvas.width;
-        const y = Math.random() * canvas.height / 2;
+        const y = (Math.random() * canvas.height) / 2;
         fireworks.push(new Firework(x, y));
       }
-    
+
       setInterval(launchFirework, 800);
       animate();
-    }else {
+    } else {
       message.textContent = "😞 Try Again";
       message.classList.remove("hidden");
     }
-
   } else {
     console.error("No result data found in localStorage");
     document.getElementById("total-score").textContent = "N/A";
   }
 
   document.getElementById("retake-exam-btn").addEventListener("click", () => {
-    window.location.href = "../html/questions.html";
+    window.location.replace("../html/questions.html");
   });
 
   document.getElementById("logout-btn").addEventListener("click", () => {
     window.location.replace("../html/login.html");
   });
 });
-
-
