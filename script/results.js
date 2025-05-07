@@ -42,7 +42,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("success-screen").classList.add("hidden");
       }, 2000);
       
-      // Show canvas
       const canvas = document.getElementById("fireworksCanvas");
       canvas.classList.remove("hidden");
       const ctx = canvas.getContext('2d');

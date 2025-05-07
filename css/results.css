@@ -110,14 +110,12 @@ body {
     cursor: pointer;
     font-weight: bold;
     box-shadow: 0 0 20px #00000040;
-    /* transition: all 0.3s ease; */
 }
 
 .action-buttons button:hover {
     background-color: #ffffffad;
     color: #030321;
-    /* transform: translateY(-2px); */
-}
+} 
 
 #logout-btn {
     background-color: #7a0000;
