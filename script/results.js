@@ -1,19 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
   const resultData = JSON.parse(localStorage.getItem("examResult"));
+  const userData = localStorage.getItem("currentUser");
+  const user = JSON.parse(userData);
+  console.log("userr", user);
 
-  let username = "Guest";
-
-  const storedUsername = localStorage.getItem("currentUserName");
-  if (storedUsername) {
-    username = storedUsername;
-  } else {
-    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-    if (currentUser && currentUser.userName) {
-      username = currentUser.userName;
-    }
-  }
-
-  document.getElementById("username-display").textContent = username;
+  document.getElementById("username-display").textContent = user.userName;
 
   if (resultData) {
     document.getElementById("total-score").textContent = `${Math.round(

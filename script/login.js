@@ -45,8 +45,6 @@ function checkLogin(e) {
     if (user) {
       if (user.password === enteredPassword) {
         localStorage.setItem("currentUser", JSON.stringify(user));
-        localStorage.setItem("currentUserName", user.userName);
-
         setTimeout(() => {
           window.location.replace("../html/welcome.html");
         }, 1000);
