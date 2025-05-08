@@ -18,11 +18,11 @@ async function handleCategoryClick(button) {
 
   try {
     const questions = await fetchQuestions(button.id);
-    shuffle(questions);
+    const shuffledQuestions = shuffle(questions);
     setTimeout(() => {
       loadingScreen.remove();
       const layout = createQuestionsLayout();
-      startExam(questions, layout);
+      startExam(shuffledQuestions, layout);
     }, 1000);
   } catch (error) {
     console.error("Error fetching questions:", error);
@@ -34,11 +34,13 @@ async function fetchQuestions(id) {
   return response.json();
 }
 function shuffle(array) {
-  for (let i = array.length - 1; i > 0; i--) {
+  const tempArray = [...array];
+  for (let i = tempArray.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
+    [tempArray[i], tempArray[j]] = [tempArray[j], tempArray[i]];
   }
-  return array;
+  return tempArray;
+
 }
 function createLoadingScreen() {
   return createElement("div", ["loading-screen"], '<div class="loader"></div>');
@@ -80,13 +82,15 @@ function createQuestionLayout() {
 
 function startExam(questions, layout) {
   const userAnswers = {};
-  const startTime = new Date();
-  localStorage.setItem("examStartTime", startTime.toISOString());
   let currentQuestionIndex = 0;
-  const duration = 180;
+  const timer = 180;
+  const startTime = new Date();
+
   const questionDiv = createQuestionLayout();
   layout.querySelector("#header").after(questionDiv);
-  startTimer(duration, layout);
+  const timerData = { timer, layout, startTime, questions, userAnswers };
+  startTimer(timerData);
+
   displayQuestion(questionDiv, questions, currentQuestionIndex, userAnswers);
 
   const submitBtn = layout.querySelector(".submit-btn");
@@ -104,10 +108,9 @@ function startExam(questions, layout) {
   };
 
   setupAnswerHandler(questionDiv, examData);
-  localStorage.setItem("currentQuestions", JSON.stringify(questions));
-
   setupNavigation(examData);
-  setupSubmitHandler(examData);
+  setupSubmitHandler(examData, startTime);
+
   setupFlagHandler(examData);
   setupSidebarClickHandler(examData);
 }
@@ -151,8 +154,12 @@ function setupAnswerHandler(container, data) {
     };
     localStorage.setItem("userAnswers", JSON.stringify(data.userAnswers));
 
+    enableSubmitIfAllQuestionsAnswered(
+      data.userAnswers,
+      data.submitBtn,
+      data.questions
+    );
 
-    checkEnableSubmit(data.userAnswers, data.submitBtn, data.questions);
     renderSidebar(data.questions, index, data.userAnswers);
   });
 }
@@ -168,7 +175,9 @@ function setupNavigation(data) {
         data.userAnswers
       );
       data.previousBtn.disabled = false;
-      toggleNextBtn(data);
+      disableNextBtnIfLastQuestion(data);
+      enableSubmitBtnIfLastQuestion(data);
+
     }
   });
 
@@ -181,47 +190,63 @@ function setupNavigation(data) {
         data.currentQuestionIndex,
         data.userAnswers
       );
-      togglePreviousBtn({
+      data.nextBtn.disabled = false;
+      enablePreviousBtnIfFirstQuestion({
         previousBtn: data.previousBtn,
         currentQuestionIndex: data.currentQuestionIndex,
       });
-      data.nextBtn.disabled = false;
+      enableSubmitIfAllQuestionsAnswered(
+        data.userAnswers,
+        data.submitBtn,
+        data.questions
+      );
     }
   });
 }
-function toggleNextBtn(data) {
+function disableNextBtnIfLastQuestion(data) {
   data.nextBtn.disabled =
     data.currentQuestionIndex === data.questions.length - 1;
 }
-function togglePreviousBtn(data) {
+function enableSubmitBtnIfLastQuestion(data) {
+  if (data.currentQuestionIndex === data.questions.length - 1) {
+    data.submitBtn.disabled = false;
+  }
+}
+function enablePreviousBtnIfFirstQuestion(data) {
   data.previousBtn.disabled = data.currentQuestionIndex === 0;
 }
 
-function setupSubmitHandler(data) {
+function setupSubmitHandler(data, startTime) {
   data.submitBtn.addEventListener("click", () => {
-    const startTime = new Date(localStorage.getItem("examStartTime"));
-    const endTime = new Date();
-    const elapsedSeconds = Math.floor((endTime - startTime) / 1000);
-    const minutes = Math.floor(elapsedSeconds / 60);
-    const seconds = elapsedSeconds % 60;
-    const timeSpent = `${String(minutes).padStart(2, "0")}:${String(
-      seconds
-    ).padStart(2, "0")}`;
-
-    const result = getResult(data.userAnswers, data.questions);
-
-    localStorage.setItem(
-      "examResult",
-      JSON.stringify({
-        score: result.totalScore,
-        correct: result.answers.correct,
-        incorrect: result.answers.incorrect,
-        time: timeSpent,
-      })
-    );
-
-    window.location.replace("../html/results.html");
+    if (Object.keys(data.userAnswers).length !== data.questions.length) {
+      handleAllQuestionsNotAnswered();
+      return;
+    }
+    handleAllQuestionsAnswered(data, startTime);
   });
+}
+function handleAllQuestionsAnswered(data, startTime) {
+  const timeSpent = getTimeSpent(startTime);
+  const result = getResult(data.userAnswers, data.questions);
+  setResult(timeSpent, result);
+  window.location.replace("../html/results.html");
+}
+function handleAllQuestionsNotAnswered() {
+  const message = document.querySelector(".message");
+  message.classList.remove("hidden");
+  setTimeout(() => {
+    message.classList.add("hidden");
+  }, 2000);
+}
+function getTimeSpent(startTime) {
+  const endTime = new Date();
+  const elapsedSeconds = Math.floor((endTime - startTime) / 1000);
+  const minutes = Math.floor(elapsedSeconds / 60);
+  const seconds = elapsedSeconds % 60;
+  const timeSpent = `${String(minutes).padStart(2, "0")}:${String(
+    seconds
+  ).padStart(2, "0")}`;
+  return timeSpent;
 }
 
 function setupFlagHandler(data) {
@@ -244,50 +269,47 @@ function setupFlagHandler(data) {
   });
 }
 
-
-function startTimer(duration, layout) {
+function startTimer({ timer, layout, startTime, questions, userAnswers }) {
+  const originalTimer = timer;
   const display = layout.querySelector(".timer");
   const loadingNav = layout.querySelector("#loading-nav");
-  let timer = duration;
   updateTimer();
 
   const interval = setInterval(() => {
     updateTimer();
     if (--timer < 0) {
       clearInterval(interval);
-
-      const startTime = new Date(localStorage.getItem("examStartTime"));
-      const endTime = new Date();
-      const elapsedSeconds = Math.floor((endTime - startTime) / 1000);
-      const minutes = Math.floor(elapsedSeconds / 60);
-      const seconds = elapsedSeconds % 60;
-      const timeSpent = `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
-
-      const questions = JSON.parse(localStorage.getItem("currentQuestions") || "[]");
-      const userAnswers = JSON.parse(localStorage.getItem("userAnswers") || "{}");
-
+      const timeSpent = getTimeSpent(startTime);
       const result = getResult(userAnswers, questions);
-
-      localStorage.setItem("examResult", JSON.stringify({
-        score: result.totalScore,
-        correct: result.answers.correct,
-        incorrect: result.answers.incorrect,
-        time: timeSpent,
-      }));
-
-      window.location.href = "../html/results.html";
+      setResult(timeSpent, result);
+      window.location.replace("../html/results.html");
     }
   }, 1000);
 
-  increaseLoadingNav(loadingNav, duration);
+  increaseLoadingNav(loadingNav, timer);
+
 
   function updateTimer() {
     const min = String(Math.floor(timer / 60)).padStart(2, "0");
     const sec = String(timer % 60).padStart(2, "0");
     display.textContent = `${min}:${sec}`;
-    display.classList.toggle("warning", timer < 60);
+    if (timer / originalTimer <= 0.25) {
+      display.classList.add("warning");
+    }
   }
 }
+function setResult(timeSpent, result) {
+  localStorage.setItem(
+    "examResult",
+    JSON.stringify({
+      score: result.totalScore,
+      correct: result.answers.correct,
+      incorrect: result.answers.incorrect,
+      time: timeSpent,
+    })
+  );
+}
+
 
 function increaseLoadingNav(nav, duration) {
   const step = 100 / duration;
@@ -300,7 +322,8 @@ function increaseLoadingNav(nav, duration) {
     width += step;
     secondsPassed++;
 
-    if (secondsPassed >= 122) {
+    if (secondsPassed / duration >= 0.75) {
+
       nav.style.backgroundColor = "#FF0000";
     } else {
       nav.style.backgroundColor = "#007BFF";
@@ -354,19 +377,23 @@ function setupSidebarClickHandler(data) {
       data.currentQuestionIndex,
       data.userAnswers
     );
-    toggleNextBtn({
+    disableNextBtnIfLastQuestion({
       nextBtn: document.querySelector(".next-btn"),
       ...data,
     });
-    togglePreviousBtn({
+    enablePreviousBtnIfFirstQuestion({
+
       previousBtn: document.querySelector(".previous-btn"),
       ...data,
     });
   });
 }
 
-function checkEnableSubmit(answers, button, questions) {
-  button.disabled = Object.keys(answers).length !== questions.length;
+function enableSubmitIfAllQuestionsAnswered(answers, button, questions) {
+  if (Object.keys(answers).length === questions.length) {
+    button.disabled = false;
+  }
+
 }
 
 function getResult(answers, questions) {
@@ -377,7 +404,6 @@ function getResult(answers, questions) {
       correctAnswersNumber++;
     }
   }
-
   const totalScore = (correctAnswersNumber / questions.length) * 100;
   const time = document.querySelector(".timer").textContent;
 

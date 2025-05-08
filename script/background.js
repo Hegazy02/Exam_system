@@ -46,10 +46,9 @@ class Beam {
         let opacity = this.opacity;
 
         if (this.life < fadeInDuration) {
-            // Fade In
             opacity *= this.life / fadeInDuration;
         } else if (this.life > this.maxLife - fadeOutDuration) {
-            // Fade Out
+
             opacity *= (this.maxLife - this.life) / fadeOutDuration;
         }
 

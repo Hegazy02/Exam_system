@@ -102,15 +102,17 @@ header {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    max-width: 600px;
-    min-width: 600px;
-    border-radius: 10px;
+    max-width: 800px;
+    min-width: 800px;
+    border-radius: 5px;
     width: 100%;
     background-color: #ffffff15;
     padding: 20px;
     z-index: 1;
     backdrop-filter: blur(10px);
     color: #ffffffad;
+    box-shadow: 0 0 30px #dbd6d61f;
+
 }
 
 
@@ -251,4 +253,103 @@ button:disabled {
 .answered-question {
     background-color: #39398e;
     color: white;
+}
+
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 0.5s, opacity 0.5s linear;
+}
+
+.message {
+    color: #f0f0f0;
+    background-color: red;
+    border-radius: 5px;
+    padding: 10px;
+    position: absolute;
+    top: 40px;
+    right: 50%;
+    transform: translateX(50%);
+    z-index: 100;
+    box-shadow: 0 0 10px #00000040;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@media screen and (max-width: 767px) {
+    #categories-layout {
+        width: 90%;
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    .questions-layout section {
+        min-width: unset;
+        max-width: 100%;
+        width: 90%;
+        margin: 0 auto;
+        padding: 15px;
+    }
+
+    .question h3 {
+        height: auto;
+        min-height: 40px;
+    }
+
+    .btns {
+        flex-direction: column;
+    }
+
+    .next-btn,
+    .previous-btn,
+    .submit-btn {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .option {
+        padding: 8px;
+    }
+
+    #sidebar {
+        gap: 10px;
+    }
+
+    .question-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .message {
+        width: 90%;
+        right: unset;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 991px) {
+    #categories-layout {
+        width: 85%;
+    }
+
+    .questions-layout section {
+        min-width: unset;
+        max-width: 100%;
+        width: 85%;
+        margin: 0 auto;
+    }
+
+    .question h3 {
+        height: auto;
+        min-height: 40px;
+    }
 }
