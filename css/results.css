@@ -25,6 +25,7 @@ body {
 }
 
 
+
 .results-header {
     text-align: center;
     margin-bottom: 20px;
@@ -110,12 +111,14 @@ body {
     cursor: pointer;
     font-weight: bold;
     box-shadow: 0 0 20px #00000040;
+
 }
 
 .action-buttons button:hover {
     background-color: #ffffffad;
     color: #030321;
 } 
+
 
 #logout-btn {
     background-color: #7a0000;
@@ -229,5 +232,23 @@ body {
     
     .success {
         font-size: 32px;
+    }
+}
+
+@media (max-width: 768px) {
+    .results-summary {
+        flex-direction: column;
+    }
+
+    .summary-item {
+        width: 100%;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .action-buttons button {
+        width: 100%;
     }
 }

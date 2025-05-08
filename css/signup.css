@@ -6,6 +6,7 @@
   box-sizing: border-box;
   font-family: 'Fira Code', monospace;
   font-size: large;
+
 }
 
 body {
@@ -51,6 +52,7 @@ input:-webkit-autofill {
   background-color: #ffffffad !important;
   -webkit-box-shadow: 0 0 0px 1000px #ffffffad inset !important;
   -webkit-text-fill-color: #000 !important;
+
 }
 
 #login-form input:hover::placeholder {
