@@ -161,7 +161,7 @@ header {
     border-radius: 5px;
     border: none;
     background-color: var(--main-color);
-    color: white;
+    color:  #ffffffad;
     font-weight: bold;
 }
 
@@ -171,7 +171,7 @@ header {
     border-radius: 5px;
     border: none;
     background-color: #007BFF;
-    color: white;
+    color:  #ffffffad;
     font-weight: bold;
 
 }
@@ -218,19 +218,22 @@ button:disabled {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 20px;
+    gap: 40px;
     box-sizing: border-box;
+    font-size: 24px;
 }
 
 .question-icon {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background-color: #ffffff79;
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
+    box-shadow: 0 0 30px rgba(219, 214, 214, 0.122);
+
 }
 
 .active-question {
@@ -242,17 +245,17 @@ button:disabled {
 .flagged-question,
 .flagged-and-answered-question {
     background-color: #007BFF;
-    color: white;
+    color: #ffffffad;
 }
 
 .flagged-and-active-question {
     background-color: #007BFF;
-    color: white;
+    color:  #ffffffad;
 }
 
 .answered-question {
     background-color: #39398e;
-    color: white;
+    color:  #ffffffad;
 }
 
 .hidden {
@@ -262,7 +265,7 @@ button:disabled {
 }
 
 .message {
-    color: #f0f0f0;
+    color:  #ffffffad;
     background-color: red;
     border-radius: 5px;
     padding: 10px;
