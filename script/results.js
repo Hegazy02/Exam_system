@@ -131,6 +131,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("logout-btn").addEventListener("click", () => {
-    window.location.replace("../html/login.html");
+    window.location.replace("../index.html");
   });
 });

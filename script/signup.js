@@ -203,7 +203,7 @@ function signUpPage() {
       displayElement(successMessage, "User registered successfully.");
 
       setTimeout(() => {
-        window.location.replace("login.html");
+        window.location.replace("../index.html");
       }, 1000);
     }
   });
