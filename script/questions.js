@@ -40,6 +40,7 @@ function shuffle(array) {
     [tempArray[i], tempArray[j]] = [tempArray[j], tempArray[i]];
   }
   return tempArray;
+
 }
 function createLoadingScreen() {
   return createElement("div", ["loading-screen"], '<div class="loader"></div>');
@@ -89,6 +90,7 @@ function startExam(questions, layout) {
   layout.querySelector("#header").after(questionDiv);
   const timerData = { timer, layout, startTime, questions, userAnswers };
   startTimer(timerData);
+
   displayQuestion(questionDiv, questions, currentQuestionIndex, userAnswers);
 
   const submitBtn = layout.querySelector(".submit-btn");
@@ -106,9 +108,9 @@ function startExam(questions, layout) {
   };
 
   setupAnswerHandler(questionDiv, examData);
-
   setupNavigation(examData);
   setupSubmitHandler(examData, startTime);
+
   setupFlagHandler(examData);
   setupSidebarClickHandler(examData);
 }
@@ -157,6 +159,7 @@ function setupAnswerHandler(container, data) {
       data.submitBtn,
       data.questions
     );
+
     renderSidebar(data.questions, index, data.userAnswers);
   });
 }
@@ -174,6 +177,7 @@ function setupNavigation(data) {
       data.previousBtn.disabled = false;
       disableNextBtnIfLastQuestion(data);
       enableSubmitBtnIfLastQuestion(data);
+
     }
   });
 
@@ -244,6 +248,7 @@ function getTimeSpent(startTime) {
   ).padStart(2, "0")}`;
   return timeSpent;
 }
+
 function setupFlagHandler(data) {
   const flagBtn = document.querySelector("#flag");
   const sidebar = document.querySelector("#sidebar");
@@ -269,6 +274,7 @@ function startTimer({ timer, layout, startTime, questions, userAnswers }) {
   const display = layout.querySelector(".timer");
   const loadingNav = layout.querySelector("#loading-nav");
   updateTimer();
+
   const interval = setInterval(() => {
     updateTimer();
     if (--timer < 0) {
@@ -281,6 +287,7 @@ function startTimer({ timer, layout, startTime, questions, userAnswers }) {
   }, 1000);
 
   increaseLoadingNav(loadingNav, timer);
+
 
   function updateTimer() {
     const min = String(Math.floor(timer / 60)).padStart(2, "0");
@@ -303,6 +310,7 @@ function setResult(timeSpent, result) {
   );
 }
 
+
 function increaseLoadingNav(nav, duration) {
   const step = 100 / duration;
   let width = 0;
@@ -315,6 +323,7 @@ function increaseLoadingNav(nav, duration) {
     secondsPassed++;
 
     if (secondsPassed / duration >= 0.75) {
+
       nav.style.backgroundColor = "#FF0000";
     } else {
       nav.style.backgroundColor = "#007BFF";
@@ -373,6 +382,7 @@ function setupSidebarClickHandler(data) {
       ...data,
     });
     enablePreviousBtnIfFirstQuestion({
+
       previousBtn: document.querySelector(".previous-btn"),
       ...data,
     });
@@ -383,10 +393,12 @@ function enableSubmitIfAllQuestionsAnswered(answers, button, questions) {
   if (Object.keys(answers).length === questions.length) {
     button.disabled = false;
   }
+
 }
 
 function getResult(answers, questions) {
   let correctAnswersNumber = 0;
+
   for (let i = 0; i < questions.length; i++) {
     if (answers[i]?.isRightAnswer) {
       correctAnswersNumber++;
@@ -394,6 +406,7 @@ function getResult(answers, questions) {
   }
   const totalScore = (correctAnswersNumber / questions.length) * 100;
   const time = document.querySelector(".timer").textContent;
+
   return {
     totalScore,
     time,

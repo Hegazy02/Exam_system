@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("username-display").textContent = user.userName;
 
+
   if (resultData) {
     document.getElementById("total-score").textContent = `${Math.round(
       resultData.score
@@ -17,9 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector(".summary-item:nth-child(3) h3").textContent =
       "Time Spent";
     document.getElementById("time-taken").textContent = resultData.time;
-
     const score = resultData.score;
-
     const message = document.getElementById("result-message");
 
     if (score >= 60) {
@@ -121,6 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
       message.textContent = "😞 Try Again";
       message.classList.remove("hidden");
     }
+
   } else {
     console.error("No result data found in localStorage");
     document.getElementById("total-score").textContent = "N/A";
@@ -132,5 +132,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.getElementById("logout-btn").addEventListener("click", () => {
     window.location.replace("../index.html");
+
   });
 });
