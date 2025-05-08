@@ -252,3 +252,32 @@ button:disabled {
     background-color: #39398e;
     color: white;
 }
+
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 0.5s, opacity 0.5s linear;
+}
+
+.message {
+    color: #f0f0f0;
+    background-color: red;
+    border-radius: 5px;
+    padding: 10px;
+    position: absolute;
+    top: 40px;
+    right: 50%;
+    transform: translateX(50%);
+    z-index: 100;
+    box-shadow: 0 0 10px #00000040;
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}

@@ -152,7 +152,11 @@ function setupAnswerHandler(container, data) {
     };
     localStorage.setItem("userAnswers", JSON.stringify(data.userAnswers));
 
-    checkEnableSubmit(data.userAnswers, data.submitBtn, data.questions);
+    enableSubmitIfAllQuestionsAnswered(
+      data.userAnswers,
+      data.submitBtn,
+      data.questions
+    );
     renderSidebar(data.questions, index, data.userAnswers);
   });
 }
@@ -168,7 +172,8 @@ function setupNavigation(data) {
         data.userAnswers
       );
       data.previousBtn.disabled = false;
-      toggleNextBtn(data);
+      disableNextBtnIfLastQuestion(data);
+      enableSubmitBtnIfLastQuestion(data);
     }
   });
 
@@ -181,29 +186,53 @@ function setupNavigation(data) {
         data.currentQuestionIndex,
         data.userAnswers
       );
-      togglePreviousBtn({
+      data.nextBtn.disabled = false;
+      enablePreviousBtnIfFirstQuestion({
         previousBtn: data.previousBtn,
         currentQuestionIndex: data.currentQuestionIndex,
       });
-      data.nextBtn.disabled = false;
+      enableSubmitIfAllQuestionsAnswered(
+        data.userAnswers,
+        data.submitBtn,
+        data.questions
+      );
     }
   });
 }
-function toggleNextBtn(data) {
+function disableNextBtnIfLastQuestion(data) {
   data.nextBtn.disabled =
     data.currentQuestionIndex === data.questions.length - 1;
 }
-function togglePreviousBtn(data) {
+function enableSubmitBtnIfLastQuestion(data) {
+  if (data.currentQuestionIndex === data.questions.length - 1) {
+    data.submitBtn.disabled = false;
+  }
+}
+function enablePreviousBtnIfFirstQuestion(data) {
   data.previousBtn.disabled = data.currentQuestionIndex === 0;
 }
 
 function setupSubmitHandler(data, startTime) {
   data.submitBtn.addEventListener("click", () => {
-    const timeSpent = getTimeSpent(startTime);
-    const result = getResult(data.userAnswers, data.questions);
-    setResult(timeSpent, result);
-    window.location.replace("../html/results.html");
+    if (Object.keys(data.userAnswers).length !== data.questions.length) {
+      handleAllQuestionsNotAnswered();
+      return;
+    }
+    handleAllQuestionsAnswered(data, startTime);
   });
+}
+function handleAllQuestionsAnswered(data, startTime) {
+  const timeSpent = getTimeSpent(startTime);
+  const result = getResult(data.userAnswers, data.questions);
+  setResult(timeSpent, result);
+  window.location.replace("../html/results.html");
+}
+function handleAllQuestionsNotAnswered() {
+  const message = document.querySelector(".message");
+  message.classList.remove("hidden");
+  setTimeout(() => {
+    message.classList.add("hidden");
+  }, 2000);
 }
 function getTimeSpent(startTime) {
   const endTime = new Date();
@@ -339,19 +368,21 @@ function setupSidebarClickHandler(data) {
       data.currentQuestionIndex,
       data.userAnswers
     );
-    toggleNextBtn({
+    disableNextBtnIfLastQuestion({
       nextBtn: document.querySelector(".next-btn"),
       ...data,
     });
-    togglePreviousBtn({
+    enablePreviousBtnIfFirstQuestion({
       previousBtn: document.querySelector(".previous-btn"),
       ...data,
     });
   });
 }
 
-function checkEnableSubmit(answers, button, questions) {
-  button.disabled = Object.keys(answers).length !== questions.length;
+function enableSubmitIfAllQuestionsAnswered(answers, button, questions) {
+  if (Object.keys(answers).length === questions.length) {
+    button.disabled = false;
+  }
 }
 
 function getResult(answers, questions) {
