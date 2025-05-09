@@ -16,7 +16,7 @@ body {
     padding: 25px;
     backdrop-filter: blur(10px);
     border-radius: 5px;
-    box-shadow: 0 0 30px #dbd6d61f;
+    box-shadow: 0 0 30px rgba(219, 214, 214, 0.122);
     width: 90%;
     max-width: 800px;
     color: #ffffffad;
