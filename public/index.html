@@ -1,40 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    <link rel="stylesheet" href="css/signup.css" />
-    <link rel="stylesheet" href="css/background.css">
-</head>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <link rel="stylesheet" href="../css/signup.css" />
+    <link rel="stylesheet" href="../css/background.css" />
+  </head>
 
-<body>
+  <body>
     <canvas id="beamsCanvas"></canvas>
 
     <form action="" id="login-form">
-        <div>
-            <label for="email">Email</label>
-            <input type="text" id="email" placeholder="Email" />
-            <span id="email-error" class="error"></span>
-        </div>
-        <div>
-            <label for="password">Password</label>
-            <input type="password" id="password" placeholder="Password" />
-            <span id="password-error" class="error"></span>
-        </div>
+      <div>
+        <label for="email">Email</label>
+        <input type="text" id="email" placeholder="Email" />
+        <span id="email-error" class="error"></span>
+      </div>
+      <div>
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Password" />
+        <span id="password-error" class="error"></span>
+      </div>
 
-        <button type="submit" id="login-btn">Login</button>
-        <p id="do-not-have-account">
-            don't have an account? <span><a href="html/signUp.html" id="signup-link">signup</a></span>
-        </p>
+      <button type="submit" id="login-btn">Login</button>
+      <p id="do-not-have-account">
+        don't have an account?
+        <span><a href="signUp.html" id="signup-link">signup</a></span>
+      </p>
 
-        <div id="error-message" class="error-message"></div>
+      <div id="error-message" class="error-message"></div>
     </form>
 
-    <script src="script/background.js"></script>
-    <script src="script/login.js"></script>
-</body>
-
+    <script src="../script/background.js"></script>
+    <script src="../script/login.js"></script>
+  </body>
 </html>
+

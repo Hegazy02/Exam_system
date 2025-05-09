@@ -127,11 +127,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   document.getElementById("retake-exam-btn").addEventListener("click", () => {
-    window.location.replace("../html/questions.html");
+    window.location.replace("../public/questions.html");
   });
 
   document.getElementById("logout-btn").addEventListener("click", () => {
-    window.location.replace("../index.html");
+    window.location.replace("../public/index.html");
 
   });
 });
