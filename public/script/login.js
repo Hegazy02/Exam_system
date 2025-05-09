@@ -46,7 +46,7 @@ function checkLogin(e) {
       if (user.password === enteredPassword) {
         localStorage.setItem("currentUser", JSON.stringify(user));
         setTimeout(() => {
-          window.location.replace("../public/welcome.html");
+          window.location.replace("welcome.html");
         }, 1000);
       } else {
         displayElement(errorMsg, "email or password is not correct!");

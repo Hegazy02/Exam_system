@@ -30,7 +30,7 @@ async function handleCategoryClick(button) {
 }
 
 async function fetchQuestions(id) {
-  const response = await fetch(`../assets/questions/${id}.json`);
+  const response = await fetch(`assets/questions/${id}.json`);
   return response.json();
 }
 function shuffle(array) {
@@ -229,7 +229,7 @@ function handleAllQuestionsAnswered(data, startTime) {
   const timeSpent = getTimeSpent(startTime);
   const result = getResult(data.userAnswers, data.questions);
   setResult(timeSpent, result);
-  window.location.replace("../public/results.html");
+  window.location.replace("results.html");
 }
 function handleAllQuestionsNotAnswered() {
   const message = document.querySelector(".message");
@@ -282,7 +282,7 @@ function startTimer({ timer, layout, startTime, questions, userAnswers }) {
       const timeSpent = getTimeSpent(startTime);
       const result = getResult(userAnswers, questions);
       setResult(timeSpent, result);
-      window.location.replace("../public/results.html");
+      window.location.replace("../results.html");
     }
   }, 1000);
 
