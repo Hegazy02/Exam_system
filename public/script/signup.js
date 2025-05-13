@@ -8,12 +8,12 @@ function isValidEmail(email) {
 }
 
 function isValidUserName(userName) {
-  const userNameRegex = /^[a-zA-Z0-9]+$/;
+  const userNameRegex = /^(?=.*[a-zA-Z])[a-zA-Z][a-zA-Z0-9]{2,}$/;
   return userNameRegex.test(userName);
 }
 
 function isValidPassword(password) {
-  const passwordRegex = /^[a-zA-Z0-9]{8,}$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
   return passwordRegex.test(password);
 }
 
@@ -84,7 +84,7 @@ function validateSignUpInputs(
       isValidUserName(userNameInput.value),
       userNameInput,
       errors.userName,
-      "Invalid username. Only letters and numbers allowed."
+      "Invalid username. Only letters and numbers allowed. Must be at least 3 characters long."
     )
   ) {
     isValid = false;
@@ -105,7 +105,7 @@ function validateSignUpInputs(
       isValidPassword(passwordInput.value),
       passwordInput,
       errors.password,
-      "Password must be at least 8 characters long."
+      "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character."
     )
   ) {
     isValid = false;
@@ -204,7 +204,6 @@ function signUpPage() {
 
       setTimeout(() => {
         window.location.replace("index.html");
-
       }, 1000);
     }
   });
