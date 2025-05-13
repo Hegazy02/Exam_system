@@ -1,3 +1,5 @@
+let currentQuestionIndex = 0;
+
 function createElement(tag, classNames = [], innerHTML = "") {
   const element = document.createElement(tag);
   classNames.forEach((className) => element.classList.add(className));
@@ -22,6 +24,7 @@ async function handleCategoryClick(button) {
     setTimeout(() => {
       loadingScreen.remove();
       const layout = createQuestionsLayout();
+
       startExam(shuffledQuestions, layout);
     }, 1000);
   } catch (error) {
@@ -40,7 +43,6 @@ function shuffle(array) {
     [tempArray[i], tempArray[j]] = [tempArray[j], tempArray[i]];
   }
   return tempArray;
-
 }
 function createLoadingScreen() {
   return createElement("div", ["loading-screen"], '<div class="loader"></div>');
@@ -52,6 +54,7 @@ function createQuestionsLayout() {
     ["questions-layout"],
     `
     <div id="loading-nav"></div> 
+    <div>
     <aside id="sidebar"></aside>
     <section class="question-section">
       <div id="header">
@@ -65,7 +68,10 @@ function createQuestionsLayout() {
           <button class="next-btn">Next</button>
         </div>
       </div>
-    </section>`
+    </section>
+    </div>
+    <div><ul class="flagged-questions"></ul></div>
+    `
   );
   document.body.appendChild(layout);
   return layout;
@@ -75,14 +81,13 @@ function createQuestionLayout() {
   const div = createElement(
     "div",
     ["question"],
-    '<h3 class="title"></h3><ul></ul>'
+    '<h3 class="title"></h3><ul class="options"></ul>'
   );
   return div;
 }
 
 function startExam(questions, layout) {
   const userAnswers = {};
-  let currentQuestionIndex = 0;
   const timer = 180;
   const startTime = new Date();
 
@@ -91,7 +96,7 @@ function startExam(questions, layout) {
   const timerData = { timer, layout, startTime, questions, userAnswers };
   startTimer(timerData);
 
-  displayQuestion(questionDiv, questions, currentQuestionIndex, userAnswers);
+  displayQuestion(questionDiv, questions, userAnswers);
 
   const submitBtn = layout.querySelector(".submit-btn");
   const nextBtn = layout.querySelector(".next-btn");
@@ -99,7 +104,6 @@ function startExam(questions, layout) {
 
   const examData = {
     questions,
-    currentQuestionIndex,
     questionDiv,
     userAnswers,
     submitBtn,
@@ -113,16 +117,31 @@ function startExam(questions, layout) {
 
   setupFlagHandler(examData);
   setupSidebarClickHandler(examData);
+  const flaggedQuestions = layout.querySelector(".flagged-questions");
+  flaggedQuestions.addEventListener("click", (e) => {
+    handleFlaggedQuestionsClick(e, examData);
+  });
 }
-
-function displayQuestion(container, questions, currentQuestionIndex, answers) {
-  renderSidebar(questions, currentQuestionIndex, answers);
+function handleFlaggedQuestionsClick(e, data) {
+  if (e.target.classList.contains("close")) {
+    e.target.closest("[index]").remove();
+    console.log("close");
+  } else if (e.target.closest("[index]")) {
+    const index = e.target.closest("[index]").getAttribute("index");
+    currentQuestionIndex = index;
+    disablePreviousBtnIfFirstQuestion(data);
+    disableNextBtnIfLastQuestion(data);
+    displayQuestion(data.questionDiv, data.questions, index, data.userAnswers);
+  }
+}
+function displayQuestion(container, questions, answers) {
+  renderSidebar(questions, answers);
 
   const current = questions[currentQuestionIndex];
   container.setAttribute("index", currentQuestionIndex);
   container.querySelector(".title").textContent = current.question;
 
-  const optionsList = container.querySelector("ul");
+  const optionsList = container.querySelector(".options");
   optionsList.innerHTML = "";
   current.options.forEach((option, i) => {
     const isSelected = answers[currentQuestionIndex]?.selectedAnswer === i;
@@ -166,34 +185,22 @@ function setupAnswerHandler(container, data) {
 
 function setupNavigation(data) {
   data.nextBtn.addEventListener("click", () => {
-    if (data.currentQuestionIndex < data.questions.length - 1) {
-      data.currentQuestionIndex++;
-      displayQuestion(
-        data.questionDiv,
-        data.questions,
-        data.currentQuestionIndex,
-        data.userAnswers
-      );
+    if (currentQuestionIndex < data.questions.length - 1) {
+      currentQuestionIndex++;
+      displayQuestion(data.questionDiv, data.questions, data.userAnswers);
       data.previousBtn.disabled = false;
       disableNextBtnIfLastQuestion(data);
       enableSubmitBtnIfLastQuestion(data);
-
     }
   });
 
   data.previousBtn.addEventListener("click", () => {
-    if (data.currentQuestionIndex > 0) {
-      data.currentQuestionIndex--;
-      displayQuestion(
-        data.questionDiv,
-        data.questions,
-        data.currentQuestionIndex,
-        data.userAnswers
-      );
+    if (currentQuestionIndex > 0) {
+      currentQuestionIndex--;
+      displayQuestion(data.questionDiv, data.questions, data.userAnswers);
       data.nextBtn.disabled = false;
       disablePreviousBtnIfFirstQuestion({
         previousBtn: data.previousBtn,
-        currentQuestionIndex: data.currentQuestionIndex,
       });
       enableSubmitIfAllQuestionsAnswered(
         data.userAnswers,
@@ -204,16 +211,15 @@ function setupNavigation(data) {
   });
 }
 function disableNextBtnIfLastQuestion(data) {
-  data.nextBtn.disabled =
-    data.currentQuestionIndex === data.questions.length - 1;
+  data.nextBtn.disabled = currentQuestionIndex == data.questions.length - 1;
 }
 function enableSubmitBtnIfLastQuestion(data) {
-  if (data.currentQuestionIndex === data.questions.length - 1) {
+  if (currentQuestionIndex == data.questions.length - 1) {
     data.submitBtn.disabled = false;
   }
 }
 function disablePreviousBtnIfFirstQuestion(data) {
-  data.previousBtn.disabled = data.currentQuestionIndex === 0;
+  data.previousBtn.disabled = currentQuestionIndex == 0;
 }
 
 function setupSubmitHandler(data, startTime) {
@@ -254,9 +260,9 @@ function setupFlagHandler(data) {
   const sidebar = document.querySelector("#sidebar");
 
   flagBtn.addEventListener("click", () => {
-    const item = sidebar.children[data.currentQuestionIndex];
+    const item = sidebar.children[currentQuestionIndex];
     const classes = item.classList;
-
+    addFlaggedQuestions(data.questions[currentQuestionIndex]);
     if (classes.contains("answered-question")) {
       classes.replace("answered-question", "flagged-and-answered-question");
     } else if (classes.contains("flagged-and-active-question")) {
@@ -267,6 +273,29 @@ function setupFlagHandler(data) {
       classes.toggle("flagged-question");
     }
   });
+}
+function addFlaggedQuestions(question) {
+  const flaggedQuestions = document.querySelector(".flagged-questions");
+  const flaggedQuestion = flaggedQuestions.querySelector(
+    `[index="${currentQuestionIndex}"]`
+  );
+
+  if (flaggedQuestion) {
+    flaggedQuestions.removeChild(flaggedQuestion);
+  } else {
+    flaggedQuestions.innerHTML += `<li index="${currentQuestionIndex}"><span>${
+      currentQuestionIndex + 1
+    } ${
+      question.question.length > 20
+        ? question.question.substring(0, 20) + "..."
+        : question.question
+    }</span><i class="fa-solid fa-xmark close"></i></li>`;
+  }
+  if (flaggedQuestions.children.length > 7) {
+    flaggedQuestions.style.overflowY = "scroll";
+  } else {
+    flaggedQuestions.style.overflowY = "hidden";
+  }
 }
 
 function startTimer({ timer, layout, startTime, questions, userAnswers }) {
@@ -287,7 +316,6 @@ function startTimer({ timer, layout, startTime, questions, userAnswers }) {
   }, 1000);
 
   increaseLoadingNav(loadingNav, timer);
-
 
   function updateTimer() {
     const min = String(Math.floor(timer / 60)).padStart(2, "0");
@@ -310,7 +338,6 @@ function setResult(timeSpent, result) {
   );
 }
 
-
 function increaseLoadingNav(nav, duration) {
   const step = 100 / duration;
   let width = 0;
@@ -323,7 +350,6 @@ function increaseLoadingNav(nav, duration) {
     secondsPassed++;
 
     if (secondsPassed / duration >= 0.75) {
-
       nav.style.backgroundColor = "#FF0000";
     } else {
       nav.style.backgroundColor = "#007BFF";
@@ -333,7 +359,7 @@ function increaseLoadingNav(nav, duration) {
   }, 1000);
 }
 
-function renderSidebar(questions, current, answers) {
+function renderSidebar(questions, answers) {
   const sidebar = document.querySelector("#sidebar");
   const flagged = new Set();
   const keys = Object.keys(answers);
@@ -351,7 +377,7 @@ function renderSidebar(questions, current, answers) {
     let className = "";
     const isFlagged = flagged.has(i);
     const isAnswered = keys.includes(i.toString());
-    const isCurrent = i === current;
+    const isCurrent = i === currentQuestionIndex;
 
     if (isFlagged && isAnswered) className = "flagged-and-answered-question";
     else if (isFlagged && isCurrent) className = "flagged-and-active-question";
@@ -370,19 +396,13 @@ function setupSidebarClickHandler(data) {
     const target = e.target.closest(".question-icon");
     if (!target) return;
     const index = parseInt(target.textContent) - 1;
-    data.currentQuestionIndex = index;
-    displayQuestion(
-      data.questionDiv,
-      data.questions,
-      data.currentQuestionIndex,
-      data.userAnswers
-    );
+    currentQuestionIndex = index;
+    displayQuestion(data.questionDiv, data.questions, data.userAnswers);
     disableNextBtnIfLastQuestion({
       nextBtn: document.querySelector(".next-btn"),
       ...data,
     });
     disablePreviousBtnIfFirstQuestion({
-
       previousBtn: document.querySelector(".previous-btn"),
       ...data,
     });
@@ -393,7 +413,6 @@ function enableSubmitIfAllQuestionsAnswered(answers, button, questions) {
   if (Object.keys(answers).length === questions.length) {
     button.disabled = false;
   }
-
 }
 
 function getResult(answers, questions) {
