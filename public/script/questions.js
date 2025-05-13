@@ -191,7 +191,7 @@ function setupNavigation(data) {
         data.userAnswers
       );
       data.nextBtn.disabled = false;
-      enablePreviousBtnIfFirstQuestion({
+      disablePreviousBtnIfFirstQuestion({
         previousBtn: data.previousBtn,
         currentQuestionIndex: data.currentQuestionIndex,
       });
@@ -212,7 +212,7 @@ function enableSubmitBtnIfLastQuestion(data) {
     data.submitBtn.disabled = false;
   }
 }
-function enablePreviousBtnIfFirstQuestion(data) {
+function disablePreviousBtnIfFirstQuestion(data) {
   data.previousBtn.disabled = data.currentQuestionIndex === 0;
 }
 
@@ -381,7 +381,7 @@ function setupSidebarClickHandler(data) {
       nextBtn: document.querySelector(".next-btn"),
       ...data,
     });
-    enablePreviousBtnIfFirstQuestion({
+    disablePreviousBtnIfFirstQuestion({
 
       previousBtn: document.querySelector(".previous-btn"),
       ...data,
